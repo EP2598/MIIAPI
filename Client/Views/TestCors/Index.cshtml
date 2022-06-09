@@ -1,0 +1,27 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript" ></script>
+</head>
+<body>
+</body>
+</html>
+<script type="text/javascript">
+    $.ajax({
+        type: "GET",
+        url: "https://localhost:44309/API/Employees/TestCORS",
+        success: function (result) {
+            console.log(result);
+        }
+    });
+</script>
