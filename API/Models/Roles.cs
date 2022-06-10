@@ -8,32 +8,15 @@ namespace API.Models
 {
     public partial class Roles
     {
+        public Roles()
+        {
+            AccountRoles = new HashSet<AccountRoles>();
+        }
         [Key]
         public int RolesId { get; set; }
         public string RoleName { get; set; }
 
-        //public virtual ICollection<AccountRoles> AccountRoles { get; set; }
+        public virtual ICollection<AccountRoles> AccountRoles { get; set; }
 
-        #region LazyLoad
-        private Lazy<List<AccountRoles>> _accountroles;
-
-        public Roles(int RolesId = 0)
-        {
-            this.RolesId = RolesId;
-            _accountroles = new Lazy<List<AccountRoles>>(() =>
-            {
-                return new List<AccountRoles>();
-            });
-        }
-
-        public List<AccountRoles> AccountRoles
-        {
-            get
-            {
-                return _accountroles.Value;
-            }
-            set { }
-        } 
-        #endregion
     }
 }

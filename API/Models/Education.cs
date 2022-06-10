@@ -9,6 +9,11 @@ namespace API.Models
 {
     public partial class Education
     {
+        public Education()
+        {
+            Profilings = new HashSet<Profiling>();
+        }
+
         [Key]
         public int Id { get; set; }
         public Degree Degree { get; set; }
@@ -16,45 +21,8 @@ namespace API.Models
         public string GPA { get; set; }
         [Required]
         public int University_Id { get; set; }
-        //public virtual University University { get; set; }
-        //public virtual ICollection<Profiling> Profilings { get; set; }
-
-        #region LazyLoad
-        private Lazy<List<Profiling>> _profiling;
-        private Lazy<University> _university;
-
-        public Education(int Id = 0)
-        {
-            this.Id = Id;
-
-            _profiling = new Lazy<List<Profiling>>(() =>
-            {
-                return new List<Profiling>();
-            });
-            _university = new Lazy<University>(() =>
-            {
-                return new University(this.University_Id);
-            });
-        }
-
-        public List<Profiling> Profiling
-        {
-            get
-            {
-                return _profiling.Value;
-            }
-            set { }
-        }
-
-        public University University
-        {
-            get
-            {
-                return _university.Value;
-            }
-            set { }
-        } 
-        #endregion
+        public virtual University University { get; set; }
+        public virtual ICollection<Profiling> Profilings { get; set; }
 
     }
     public enum Degree

@@ -65,7 +65,7 @@ namespace API
             });
 
             services.AddDbContext<MyContext>(options => 
-            options.UseSqlServer(Configuration.GetConnectionString("APIContext")));
+            options.UseLazyLoadingProxies().UseSqlServer(Configuration.GetConnectionString("APIContext")));
 
         }
 

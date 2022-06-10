@@ -70,7 +70,8 @@ namespace API.Repository.Data
             if (!isEmailDuplicate && !isPhoneDuplicate)
             {
                 #region Employee Object
-                Employee emp = new Employee(GenerateNIK());
+                Employee emp = new Employee();
+                emp.NIK = GenerateNIK();
                 emp.FirstName = obj.FirstName;
                 emp.LastName = obj.LastName;
                 emp.Phone = obj.Phone;
@@ -110,6 +111,13 @@ namespace API.Repository.Data
                 {
                     RolesId = 3
                 };
+                #endregion
+
+                #region Connect object
+                profilingObj.Education = eduObj;
+                accObj.Profiling = profilingObj;
+                accRolesObj.Account = accObj;
+                emp.Account = accObj; 
                 #endregion
 
                 try

@@ -17,6 +17,15 @@ namespace API.Context
         public DbSet<AccountRoles> AccountRoles { get; set; }
         #endregion
 
+        protected override void OnConfiguring(DbContextOptionsBuilder ob)
+        {
+            if (!ob.IsConfigured)
+            {
+                ob
+                    .UseLazyLoadingProxies();
+            }
+        }
+
         protected override void OnModelCreating(ModelBuilder mb)
         {
             mb.Entity<Employee>()
@@ -41,7 +50,7 @@ namespace API.Context
 
             mb.Entity<Profiling>()
                 .HasOne(a => a.Education)
-                .WithMany(b => b.Profiling)
+                .WithMany(b => b.Profilings)
                 .HasForeignKey(a => a.Education_Id);
             mb.Entity<Education>()
                 .HasOne(a => a.University)
