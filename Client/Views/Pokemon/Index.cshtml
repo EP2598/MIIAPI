@@ -55,4 +55,37 @@
             </p>
         </div>
     </div>
+    <div class="row justify-content-md-center">
+        <div id="divPokemon" class="col-md-auto">
+        </div>
+    </div>
+    <div class="row justify-content-md-center mt-4">
+        <div class="col-md-auto">
+            <button type="button" class="btn btn-dark" onclick="randomImg()">Give me a Pokemon!</button>
+        </div>
+    </div>
 </div>
+<script type="text/javascript">
+    function randomImg()
+    {
+        var imgList = new Array();
+        imgList[1] = "img/pok1.png";
+        imgList[2] = "img/pok2.png";
+        imgList[3] = "img/pok3.png";
+
+        var rnd = Math.floor(Math.random() * imgList.length);
+        if (rnd == 0)
+        {
+            rnd = 1;
+        }
+
+        var img = document.createElement("img");
+        img.src = imgList[rnd];
+        img.height = 256;
+        img.width = 256;
+
+        var divPoke = document.getElementById("divPokemon");
+        divPoke.innerHTML = null;
+        divPoke.appendChild(img);
+    }
+</script>
