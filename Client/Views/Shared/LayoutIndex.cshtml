@@ -6,6 +6,7 @@
     <title>@ViewData["Title"] - Client</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
+    <link href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css" rel="stylesheet" />
 </head>
 <body>
     <header>
@@ -30,6 +31,9 @@
                                 <a class="dropdown-item" asp-area="" asp-controller="Pokemon" asp-action="Pokemodal">Pokemon Detail</a>
                             </div>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Pokemon" asp-action="Pokeworker">Worker</a>
+                        </li>
                     </ul>
                 </div>
                 <a class="btn btn-outline-dark" asp-area="" asp-controller="Pokemon" asp-action="Search">Search</a>
@@ -51,7 +55,11 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="~/js/Latihan.js"></script>
+    <script src="~/js/Grid.js"></script>
+    <script src="~/js/Worker.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
     @RenderSection("Scripts", required: false)
 </body>
 </html>

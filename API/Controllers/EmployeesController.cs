@@ -80,5 +80,20 @@ namespace API.Controllers
         {
             return Ok("Test CORS berhasil.");
         }
+
+        [HttpGet("GetEmployeeData")]
+        [EnableCors("AllowOrigin")]
+        public ActionResult GetEmployeeData()
+        {
+            var codeRes = _empRepos.GetEmployeeData();
+            return StatusCode(
+                codeRes.Count > 0 ? 200 : 400,
+                new
+                {
+                    status = codeRes.Count > 0 ? HttpStatusCode.OK : HttpStatusCode.BadRequest,
+                    message = codeRes.Count > 0 ? "Sukses." : "Tidak ada data.",
+                    data = codeRes
+                });
+        }
     }
 }

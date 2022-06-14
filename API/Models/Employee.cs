@@ -19,7 +19,7 @@ namespace API.Models
         public string? Phone { get; set; }
         public DateTime BirthDate { get; set; }
         public decimal Salary { get; set; }
-        public bool IsDeleted { get; set; }
+        public IsDeleted IsDeleted { get; set; }
         public Gender Gender { get; set; }
 
         public virtual Account Account { get; set; }
@@ -30,5 +30,10 @@ namespace API.Models
     {
         Male,
         Female
+    }
+    public enum IsDeleted
+    { 
+        False,
+        True
     }
 }

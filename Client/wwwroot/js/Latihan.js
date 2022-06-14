@@ -1,11 +1,15 @@
 ﻿console.log("Test latihan")
 
-function Camelize(str)
-{
-    return str.replace(/(?:^\w|[A-Z]|\b\w|\s+)/g, function (match, index) {
-        if (+match === 0) return ""; // or if (/\s+/.test(match)) for white spaces
-        return index === 0 ? match.toLowerCase() : match.toUpperCase();
-    });
+function toPascalCase(string) {
+    return `${string}`
+        .toLowerCase()
+        .replace(new RegExp(/[-_]+/, 'g'), ' ')
+        .replace(new RegExp(/[^\w\s]/, 'g'), '')
+        .replace(
+            new RegExp(/\s+(.)(\w*)/, 'g'),
+            ($1, $2, $3) => `${$2.toUpperCase() + $3}`
+        )
+        .replace(new RegExp(/\w/), s => s.toUpperCase());
 }
 
 function getAbilityDetail(url) {
@@ -71,9 +75,11 @@ $.ajax(
         let text = "";
 
         $.each(result.results, function (key, value) {
+            let pokeName = "";
+            pokeName = toPascalCase(value.name);
             text += `<tr>
                         <td>${key+1}</td>
-                        <td>${value.name}</td>
+                        <td>${pokeName}</td>
                         <td>
                             <button type="button" onclick="detailFunction('${value.url}')" class="btn btn-primary" data-toggle="modal" data-target="#modalDetail">Detail</button>
                         </td>
@@ -95,6 +101,8 @@ function detailFunction(url)
             url: url
         }).done((result) => {
             console.log(result);
+            let name = "";
+            name = toPascalCase(result.name);
 
             //Image
             let img = `
@@ -102,8 +110,8 @@ function detailFunction(url)
                         `;
 
             //Name
-            let name = `
-                            <h1>${result.name}</h1>
+            let pokeName = `
+                            <h1>${name}</h1>
                         `;
 
             //Pokemon Types
@@ -192,18 +200,15 @@ function detailFunction(url)
                 statNumber.push(statList[i].base_stat);
 
                 stats += `
-                            <div class="progress">
-                              <div class="progress-bar" role="progressbar" style="width: ${statList[i].base_stat}%;" aria-valuenow="${statList[i].base_stat}" aria-valuemin="0" aria-valuemax="100">${statList[i].stat.name}</div>
+                            <div class="progress mt-1">
+                              <div class="progress-bar" role="progressbar" style="width: ${statList[i].base_stat}%; color:black" aria-valuenow="${statList[i].base_stat}" aria-valuemin="0" aria-valuemax="255">${statList[i].stat.name}</div>
                             </div>
                         `;
             }
             getPokemonStats(statNames, statNumber, result.name);
 
-
-            name = Camelize(name);
-
             $("#modalImg").html(img);
-            $("#modalTitle").html(name);
+            $("#modalTitle").html(pokeName);
             $("#modalType").html(types);
 
             
@@ -255,7 +260,7 @@ function getPokemonAbility(url)
 
             for (var i = 0; i < stories.length; i++) {
                 if (stories[i].language.name === "en") {
-                    var abilityName = Camelize(result.name);
+                    var abilityName = toPascalCase(result.name);
                     text += 
                     `
                         <tr>
@@ -291,7 +296,7 @@ function getPokemonStats(statName, statNumber, pokeName)
         data: {
             labels: statName,
             datasets: [{
-                label: Camelize(pokeName),
+                label: toPascalCase(pokeName),
                 data: statNumber,
                 backgroundColor: [
                     'rgba(105, 0, 132, .2)',

@@ -55,6 +55,15 @@ namespace API.Repository.Data
             return listRegisteredEmp;
         }
 
+        public List<Employee> GetEmployeeData()
+        {
+            List<Employee> listEmp = new List<Employee>();
+
+            listEmp = (from a in _context.Employees select a).ToList();
+
+            return listEmp;
+        }
+
         public Employee GetEmployeeByNIK(string NIK)
         {
             return _context.Employees.Where(x => x.NIK == NIK).FirstOrDefault();
@@ -79,7 +88,7 @@ namespace API.Repository.Data
                 emp.Email = obj.Email;
                 emp.BirthDate = obj.BirthDate;
                 emp.Salary = obj.Salary;
-                emp.IsDeleted = false;
+                emp.IsDeleted = (IsDeleted)Enum.Parse(typeof(IsDeleted), "False");
                 #endregion
 
                 #region Account Object
