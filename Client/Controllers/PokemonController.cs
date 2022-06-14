@@ -15,6 +15,16 @@ namespace Client.Controllers
             return View();
         }
 
+        public IActionResult Pokegrid()
+        {
+            return View();
+        }
+
+        public IActionResult Pokemodal()
+        {
+            return View();
+        }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

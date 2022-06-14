@@ -4,14 +4,16 @@ using API.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace API.Migrations
 {
     [DbContext(typeof(MyContext))]
-    partial class MyContextModelSnapshot : ModelSnapshot
+    [Migration("20220613022530_[MIIAPI-01]AddPokemonModel")]
+    partial class MIIAPI01AddPokemonModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -124,6 +126,9 @@ namespace API.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("Img")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("PokeType")
                         .HasColumnType("int");
 
@@ -133,24 +138,6 @@ namespace API.Migrations
                     b.HasKey("PokeId");
 
                     b.ToTable("Pokemons");
-                });
-
-            modelBuilder.Entity("API.Models.PokemonAbility", b =>
-                {
-                    b.Property<int>("PokeId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("PokeType")
-                        .HasColumnType("int");
-
-                    b.Property<string>("AbilityName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("PokeId", "PokeType");
-
-                    b.HasIndex("PokeType");
-
-                    b.ToTable("PokemonAbilities");
                 });
 
             modelBuilder.Entity("API.Models.PokemonType", b =>
@@ -255,25 +242,6 @@ namespace API.Migrations
                     b.Navigation("University");
                 });
 
-            modelBuilder.Entity("API.Models.PokemonAbility", b =>
-                {
-                    b.HasOne("API.Models.Pokemon", "Pokemon")
-                        .WithMany("PokemonAbilities")
-                        .HasForeignKey("PokeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("API.Models.PokemonType", "PokemonType")
-                        .WithMany("PokemonAbilities")
-                        .HasForeignKey("PokeType")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Pokemon");
-
-                    b.Navigation("PokemonType");
-                });
-
             modelBuilder.Entity("API.Models.Profiling", b =>
                 {
                     b.HasOne("API.Models.Education", "Education")
@@ -308,16 +276,6 @@ namespace API.Migrations
             modelBuilder.Entity("API.Models.Employee", b =>
                 {
                     b.Navigation("Account");
-                });
-
-            modelBuilder.Entity("API.Models.Pokemon", b =>
-                {
-                    b.Navigation("PokemonAbilities");
-                });
-
-            modelBuilder.Entity("API.Models.PokemonType", b =>
-                {
-                    b.Navigation("PokemonAbilities");
                 });
 
             modelBuilder.Entity("API.Models.Roles", b =>

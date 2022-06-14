@@ -15,6 +15,9 @@ namespace API.Context
         public DbSet<University> Universities { get; set; } 
         public DbSet<Roles> Roles { get; set; }
         public DbSet<AccountRoles> AccountRoles { get; set; }
+        public DbSet<Pokemon> Pokemons { get; set; }
+        public DbSet<PokemonType> PokemonTypes { get; set; }
+        public DbSet<PokemonAbility> PokemonAbilities { get; set; }
         #endregion
 
         protected override void OnConfiguring(DbContextOptionsBuilder ob)
@@ -56,6 +59,17 @@ namespace API.Context
                 .HasOne(a => a.University)
                 .WithMany(b => b.Educations)
                 .HasForeignKey(a => a.University_Id);
+
+            mb.Entity<PokemonAbility>()
+                .HasKey("PokeId", "PokeType");
+            mb.Entity<PokemonAbility>()
+                .HasOne(a => a.Pokemon)
+                .WithMany(b => b.PokemonAbilities)
+                .HasForeignKey(a => a.PokeId);
+            mb.Entity<PokemonAbility>()
+                .HasOne(a => a.PokemonType)
+                .WithMany(b => b.PokemonAbilities)
+                .HasForeignKey(a => a.PokeType);
         }
     }
 }

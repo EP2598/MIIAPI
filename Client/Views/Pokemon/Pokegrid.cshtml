@@ -3,3 +3,81 @@
     Layout = "LayoutIndex";
 }
 
+<table class="table table-hover" >
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Details</th>
+        </tr>
+    </thead>
+    <tbody id="tablePoke" >
+        
+    </tbody>
+</table>
+
+<div class="modal fade" id="modalDetail" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalTitle">Modal title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div id="modalBody" class="modal-body">
+                <div id="modalImg" class="row justify-content-md-center">
+
+                </div>
+                <div id="modalType" class="row justify-content-md-center mt-1">
+
+                </div>
+                <ul class="nav nav-pills mt-2 mb-3" id="pills-tab" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" id="pills-story-tab" data-toggle="pill" href="#pills-story" role="tab" aria-controls="pills-story" aria-selected="true">Story</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="pills-ability-tab" data-toggle="pill" href="#pills-ability" role="tab" aria-controls="pills-ability" aria-selected="false">Abilities</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="pills-status-tab" data-toggle="pill" href="#pills-status" role="tab" aria-controls="pills-status" aria-selected="false">Status</a>
+                    </li>
+                </ul>
+                <div class="tab-content" id="pills-tabContent">
+                    <div class="tab-pane fade show active" id="pills-story" role="tabpanel" aria-labelledby="pills-story-tab">
+
+                    </div>
+                    <div class="tab-pane fade" id="pills-ability" role="tabpanel" aria-labelledby="pills-ability-tab">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Ability Name</th>
+                                    <th>Ability Details</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tableAbilities">
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="tab-pane fade" id="pills-status" role="tabpanel" aria-labelledby="pills-status-tab">
+                        <div class="row justify-content-lg-start">
+                            <div id="divPokeRadar" class="col-sm-8">
+                                <canvas id="radarChart"></canvas>
+                            </div>
+                            <div class="col-sm-4 border-left">
+                                <h2>Status detail</h2>
+                                <div id="divPokeStats">
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
