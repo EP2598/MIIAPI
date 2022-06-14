@@ -1,19 +1,4 @@
-﻿$(document).ready(function () {
-    $('#tableGridWorkerList').DataTable({
-        columns: [
-            { data: '#' },
-            { data: 'NIK' },
-            { data: 'First Name' },
-            { data: 'Last Name' },
-            { data: 'Email' },
-            { data: 'Phone' },
-            { data: 'Birthdate' },
-            { data: 'Salary' }
-        ],
-    });
-});
-
-function toPascalCase(string) {
+﻿function toPascalCase(string) {
     return `${string}`
         .toLowerCase()
         .replace(new RegExp(/[-_]+/, 'g'), ' ')
@@ -25,32 +10,75 @@ function toPascalCase(string) {
         .replace(new RegExp(/\w/), s => s.toUpperCase());
 }
 
-$.ajax(
-    {
-        type: "GET",
-        url: "https://localhost:44309/API/Employees/GetEmployeeData"
-    }).done((result) => {
-        console.log(result);
-        let text = "";
-
-        $.each(result.data, function (key, value) {
-            let workerFirstName = "";
-            workerFirstName = toPascalCase(value.FirstName);
-            let workerLastName = "";
-            workerLastName = toPascalCase(Value.LastName);
-            text += `<tr>
-                        <td>${key + 1}</td>
-                        <td>${value.NIK}</td>
-                        <td>${workerFirstName}</td>
-                        <td>${workerLastName}</td>
-                        <td>${value.Email}</td>
-                        <td>${value.Phone}</td>
-                        <td>${value.BirthDate}</td>
-                        <td>${value.Salary}</td>
-                     </tr>`
-        });
-
-        $("#GridWorkerList").html(text);
-    }).fail((error) => {
-        console.log(error)
+function getDetails(nik) {
+    $.ajax({
+        type: "POST",
+        url: "https://localhost:44309/API/Employees/GetEmployeeDetail",
+        data: JSON.stringify({"NIK" : nik}),
+        success: function (res) {
+            console.log(res);
+        },
+        error: function (res) {
+            console.log(res);
+        },
+        dataType: "json"
     });
+}
+
+$(document).ready(function () {
+    $('#tableGridWorkerList').DataTable({
+        ajax: {
+            "url": "https://localhost:44309/API/Employees/GetEmployeeData",
+            "dataType": "json",
+            "dataSrc": "data"
+        },
+        columns: [
+            {
+                data: 'nik',
+                render: function (data)
+                {
+                    return `<a class="text-info" href="#" onclick="getDetails(${data})" data-toggle="modal" data-target="#modalEmployee">${data}</a>`;
+                }
+            },
+            {
+                data: 'firstName',
+                render: function (data)
+                {
+                    return '<span>' + toPascalCase(data) + '</span>';
+                }
+            },
+            {
+                data: 'lastName',
+                render: function (data) {
+                    return '<span>' + toPascalCase(data) + '</span>';
+                }
+            },
+            {
+                data: 'email'
+            },
+            {
+                data: 'phone'
+            },
+            {
+                data: 'birthDate',
+                render: function (data)
+                {
+                    var date = moment(data);
+
+                    return '<span>' + date.format('DD/MM/YYYY') + '</span>';
+                }
+            },
+            {
+                data: 'salary',
+                render: function (data, type) {
+                    var number = $.fn.dataTable.render
+                        .number(',', '.', 2, 'Rp. ')
+                        .display(data);
+
+                    return '<span>' + number + '</span>';
+                }
+            }
+        ],
+    });
+});
+

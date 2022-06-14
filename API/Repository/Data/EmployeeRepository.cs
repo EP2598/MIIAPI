@@ -64,9 +64,34 @@ namespace API.Repository.Data
             return listEmp;
         }
 
-        public Employee GetEmployeeByNIK(string NIK)
+        public GetEmployeeResponseVM GetEmployeeByNIK(string NIK)
         {
-            return _context.Employees.Where(x => x.NIK == NIK).FirstOrDefault();
+            GetEmployeeResponseVM objResponse = new GetEmployeeResponseVM();
+
+            Employee obj = _context.Employees.Find(NIK);
+            ICollection<Roles> roleList = (from a in _context.AccountRoles
+                                           join b in _context.Roles
+                                           on a.RolesId equals b.RolesId
+                                           where a.NIK == NIK
+                                           select b).ToList();
+            ICollection<Education> eduList = (from a in _context.Profilings
+                                              join b in _context.Educations
+                                              on a.Education_Id equals b.Id
+                                              where a.NIK == NIK
+                                              select b).ToList();
+
+            ICollection<University> uniList = (from a in eduList
+                                               join b in _context.Universities
+                                               on a.University_Id equals b.Id
+                                               select b).ToList();
+
+            objResponse.Employee = obj;
+            objResponse.Account = obj.Account;
+            objResponse.Roles = roleList;
+            objResponse.Educations = eduList;
+            objResponse.Universities = uniList;
+            
+            return objResponse;
         }
                 
         public int Register(RegisterVM obj)
@@ -104,30 +129,32 @@ namespace API.Repository.Data
                 {
                     Degree = (Degree)obj.Degree,
                     GPA = obj.GPA,
-                    University_Id = obj.UniversityId
+                    University = _context.Universities.Find(obj.UniversityId)
                 };
                 #endregion
 
                 #region Profiling Object
                 Profiling profilingObj = new Profiling
                 {
-                    Education_Id = eduObj.Id
+                    Education = eduObj,
+                    Account = accObj
                 };
                 #endregion
 
                 #region AccountRoles Object
                 AccountRoles accRolesObj = new AccountRoles
                 {
-                    RolesId = 3
+                    Account = accObj,
+                    Roles = _context.Roles.Find(3)
                 };
                 #endregion
 
-                #region Connect object
-                profilingObj.Education = eduObj;
-                accObj.Profiling = profilingObj;
-                accRolesObj.Account = accObj;
-                emp.Account = accObj; 
-                #endregion
+                //#region Connect object
+                //profilingObj.Education = eduObj;
+                //accObj.Profiling = profilingObj;
+                //accRolesObj.Account = accObj;
+                //emp.Account = accObj; 
+                //#endregion
 
                 try
                 {

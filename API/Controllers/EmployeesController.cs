@@ -95,5 +95,21 @@ namespace API.Controllers
                     data = codeRes
                 });
         }
+
+        [HttpPost("GetEmployeeDetail")]
+        [EnableCors("AllowOrigin")]
+        public ActionResult GetEmployeeDetail(GetEmployeeParameterVM obj)
+        {
+            GetEmployeeResponseVM objResponse = _empRepos.GetEmployeeByNIK(obj.NIK);
+            return StatusCode(objResponse == null ? 400 : 200,
+                new
+                {
+                    status =
+                        objResponse == null ? HttpStatusCode.BadRequest : HttpStatusCode.OK,
+                    message =
+                        objResponse == null ? "Not Found" : "Found",
+                    data = objResponse
+                });;
+        }
     }
 }

@@ -1,10 +1,7 @@
 {
   "ExpandedNodes": [
-    "",
-    "\\API",
-    "\\API\\Repository",
-    "\\API\\Repository\\Data"
+    ""
   ],
-  "SelectedNode": "\\API\\Repository\\Data\\EmployeeRepository.cs",
+  "SelectedNode": "\\API.sln",
   "PreviewInSolutionExplorer": false
 }
