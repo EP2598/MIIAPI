@@ -35,12 +35,15 @@ namespace API.Controllers
         public ActionResult Register(RegisterVM obj)
         {
             var codeRes = _empRepos.Register(obj);
-            return StatusCode(codeRes, new { 
-                status = codeRes == 200 ? HttpStatusCode.OK : HttpStatusCode.BadRequest, 
+
+            return StatusCode(codeRes, new
+            {
+                status = codeRes == 200 ? HttpStatusCode.OK : HttpStatusCode.BadRequest,
                 message = codeRes == 200 ? "Insert berhasil." :
                 codeRes == 401 ? BaseException.DataDuplicate_Phone :
-                codeRes == 402 ? BaseException.DataDuplicate_Email : 
-                codeRes == 403 ? BaseException.DataDuplicate_Email + " " + BaseException.DataDuplicate_Phone : "Insert gagal"
+                codeRes == 402 ? BaseException.DataDuplicate_Email :
+                codeRes == 403 ? BaseException.DataDuplicate_Email + " " + BaseException.DataDuplicate_Phone :
+                codeRes == 404 ? "Failed to change initial password" : "Insert gagal"
             });
         }
 

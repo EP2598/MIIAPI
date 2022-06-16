@@ -73,8 +73,6 @@ namespace API.Repository.Data
 
             if (loginRes == 200)
             {
-                var NIK = "";
-                var cekRole = "";
                 var claims = new List<Claim>();
                 claims.Add(new Claim("Email", obj.Email));
 
@@ -126,7 +124,7 @@ namespace API.Repository.Data
 
                 _context.SaveChanges();
 
-                es.Send(BaseConstanta.emailSender, email, BaseConstanta.otpSubject, "Your OTP is " + OTP);
+                es.Send(BaseConstanta.emailSender, email, BaseConstanta.otpSubject, "Your OTP is " + OTP + " . This OTP will be expired in 30 minutes.");
 
                 return 200;
             }

@@ -230,10 +230,6 @@ function validateDuplicateData(input, type) {
 
 }
 
-function submitNewEmployee() {
-    
-}
-
 $("#formRegisterEmployee").submit(function (e) {
     console.log("Masuk submit");
     e.preventDefault();
@@ -264,9 +260,24 @@ $("#formRegisterEmployee").submit(function (e) {
         console.log(res);
 
         let table = document.getElementById("tableGridWorkerList");
-        ajax.table.reload();
+        table.ajax.reload();
 
-        return res;
+        $('#modalForm').modal('toggle');
+
+        return true;
     }
-    return "Tidak ada apa apa";
+    return false;
+})
+
+$("#divEmployeeSection").on('hide.bs.collapse', function () {
+    $("#headerEmployeeSection").html(`<h3 id="headerEmployeeSection" data-toggle="collapse" data-target="#divEmployeeSection" aria-expanded="true"> [+] Employee Data</h3>`)
+})
+$("#divEmployeeSection").on('show.bs.collapse', function () {
+    $("#headerEmployeeSection").html(`<h3 id="headerEmployeeSection" data-toggle="collapse" data-target="#divEmployeeSection" aria-expanded="true"> [-] Employee Data</h3>`)
+})
+$("#divEducationSection").on('hide.bs.collapse', function () {
+    $("#headerEducationSection").html(`<h3 id="headerEducationSection" data-toggle="collapse" data-target="#divEducationSection" aria-expanded="false"> [+] Education Data</h3>`)
+})
+$("#divEducationSection").on('show.bs.collapse', function () {
+    $("#headerEducationSection").html(`<h3 id="headerEducationSection" data-toggle="collapse" data-target="#divEducationSection" aria-expanded="false"> [-] Education Data</h3>`)
 })

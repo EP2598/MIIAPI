@@ -3,6 +3,7 @@ using API.Models;
 using API.Models.API;
 using API.Repository.Data;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -43,6 +44,7 @@ namespace API.Controllers
 
         [HttpPost]
         [Route("ForgetPassword")]
+        [EnableCors("AllowOrigin")]
         public ActionResult ForgetPassword(ForgetPasswordVM obj)
         {
             int actionRes = _accRepos.ForgetPassword(obj.Email);

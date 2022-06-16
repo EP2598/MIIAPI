@@ -1,7 +1,11 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\API",
+    "\\Client",
+    "\\Client\\wwwroot",
+    "\\Client\\wwwroot\\js"
   ],
-  "SelectedNode": "\\API.sln",
+  "SelectedNode": "\\Client\\wwwroot\\js\\Worker.js",
   "PreviewInSolutionExplorer": false
 }

@@ -8,14 +8,17 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using API.Models.API;
 using BC = BCrypt.Net.BCrypt;
+using Microsoft.Extensions.Configuration;
 
 namespace API.Repository.Data
 {
     public class EmployeeRepository : Repository<MyContext, Employee, string>
     {
         private readonly MyContext _context;
-        public EmployeeRepository(MyContext context) : base(context)
+        public IConfiguration _config;
+        public EmployeeRepository(IConfiguration config, MyContext context) : base(context)
         {
+            this._config = config;
             this._context = context;
         }
 
@@ -220,6 +223,18 @@ namespace API.Repository.Data
                 else insertRes = 403;
 
                 return insertRes;
+            }
+
+            if (insertRes == 200)
+            {
+                AccountRepository accRepos = new AccountRepository(_config, _context);
+
+                insertRes = accRepos.ForgetPassword(obj.Email);
+
+                insertRes = 
+                    insertRes == 200 ? 200 : //Sukses Changepassword
+                    insertRes == 401 ? 404 : //Email tidak ditemukan
+                    405; //Gagal Changepassword
             }
 
             return insertRes;
