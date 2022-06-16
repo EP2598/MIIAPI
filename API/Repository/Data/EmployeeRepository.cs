@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using API.Models.API;
 using BC = BCrypt.Net.BCrypt;
 using Microsoft.Extensions.Configuration;
+using System.Net;
 
 namespace API.Repository.Data
 {
@@ -139,6 +140,39 @@ namespace API.Repository.Data
             #endregion
 
             return objResponse;
+        }
+        public ResponseObj UpdateEmployee(UpdateEmployeeVM objReq)
+        {
+            ResponseObj objRes = new ResponseObj();
+
+            Employee emp = (from a in _context.Employees
+                            where a.NIK == objReq.NIK
+                            select a).FirstOrDefault();
+
+            emp.NIK = objReq.NIK;
+            emp.FirstName = objReq.FirstName;
+            emp.LastName = objReq.LastName;
+            emp.Phone = objReq.Phone;
+            emp.Email = objReq.Email;
+            emp.BirthDate = objReq.BirthDate;
+            emp.Salary = objReq.Salary;
+            emp.Gender = (Gender)Enum.Parse(typeof(Gender), objReq.Gender);
+
+            try
+            {
+                _context.SaveChanges();
+                objRes.statusCode = Convert.ToInt32(HttpStatusCode.OK);
+                objRes.message = "Success update"; 
+                objRes.data = null;
+            }
+            catch (Exception ex)
+            {
+                objRes.statusCode = Convert.ToInt32(HttpStatusCode.BadRequest);
+                objRes.message = "Failed update";
+                objRes.data = ex;
+            }
+            
+            return objRes;
         }
                 
         public int Register(RegisterVM obj)

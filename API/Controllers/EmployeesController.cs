@@ -30,7 +30,7 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        [Route("Register")]
+        [Route("RegisterEmp")]
         [EnableCors("AllowOrigin")]
         public ActionResult Register(RegisterVM obj)
         {
@@ -48,11 +48,13 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        [Route("Update")]
-        public ActionResult UpdateEmp(Employee emp)
+        [Route("UpdateEmp")]
+        [EnableCors("AllowOrigin")]
+        public ActionResult UpdateEmp(UpdateEmployeeVM obj)
         {
-            return _empRepos.Update(emp) > 0 ? StatusCode(200, new { status = HttpStatusCode.OK, message = "Update berhasil." }) :
-                StatusCode(400, new { status = HttpStatusCode.BadRequest, message = "Update gagal" });
+            ResponseObj objRes = _empRepos.UpdateEmployee(obj);
+
+            return Ok(objRes);
         }
 
         [HttpPost]

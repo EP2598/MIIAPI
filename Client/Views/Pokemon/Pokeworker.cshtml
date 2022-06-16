@@ -9,12 +9,11 @@
     <thead>
         <tr>
             <th>NIK</th>
-            <th>First Name</th>
+            <th>Full Name</th>
             <th>Last Name</th>
             <th>Email</th>
             <th>Phone</th>
             <th>Birthdate</th>
-            <th>Salary</th>
         </tr>
     </thead>
     <tbody id="GridWorkerList">
@@ -22,83 +21,144 @@
     <tfoot>
         <tr>
             <th>NIK</th>
-            <th>First Name</th>
+            <th>Full Name</th>
             <th>Last Name</th>
             <th>Email</th>
             <th>Phone</th>
             <th>Birthdate</th>
-            <th>Salary</th>
         </tr>
     </tfoot>
 </table>
+
+<div id="divToast" aria-live="polite" aria-atomic="true" style="position: fixed; bottom:0px; right:0px; min-height: 200px;" data-delay="5000">
+    <div class="toast" style="position: absolute; top: 0; right: 0;">
+        <div class="toast-header">
+            <img src="~/img/logo.png" style="width:5px; height: 5px" class="rounded mr-2" alt="...">
+            <strong class="mr-auto">Information</strong>
+            <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div id="divToastBody" class="toast-body">
+
+        </div>
+    </div>
+</div>
 
 <div class="modal fade" id="modalEmployee" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="modalTitle">Modal title</h5>
+                <h5 class="modal-title" id="modalEmployeeTitle">Modal title</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div id="modalEmployeeBody" class="modal-body">
-                <ul class="nav nav-pills mt-2 mb-3" id="pills-tab" role="tablist">
-                    <li class="nav-item">
-                        <a class="nav-link active" id="pills-employee-tab" data-toggle="pill" href="#pills-employee" role="tab" aria-controls="pills-employee" aria-selected="true">Employee</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" id="pills-education-tab" data-toggle="pill" href="#pills-education" role="tab" aria-controls="pills-education" aria-selected="false">Education</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" id="pills-roles-tab" data-toggle="pill" href="#pills-roles" role="tab" aria-controls="pills-roles" aria-selected="false">Roles</a>
-                    </li>
-                </ul>
-                <div class="tab-content" id="pills-tabContent">
-                    <div class="tab-pane fade show active" id="pills-employee" role="tabpanel" aria-labelledby="pills-employee-tab">
-                        <table id="tableDetailEmployee" class="table table-hover">
-                            <thead>
-                                <tr>
-                                    <th>NIK</th>
-                                    <th>First Name</th>
-                                    <th>Last Name</th>
-                                    <th>Email</th>
-                                    <th>Phone</th>
-                                    <th>Birthdate</th>
-                                    <th>Salary</th>
-                                    <th>Gender</th>
-                                    <th>Status</th>
-                                </tr>
-                            </thead>
-                            <tbody id="GridEmployeeDetail">
-                            </tbody>
-                        </table>
+                <div id="cardDetailEmployee" class="card mb-2">
+                    <div class="card-header" data-toggle="collapse" data-target="#innerDetailEmployee" aria-expanded="true">
+                        Employee Details
                     </div>
-                    <div class="tab-pane fade" id="pills-education" role="tabpanel" aria-labelledby="pills-education-tab">
-                        <<div class="tab-pane fade show active" id="pills-employee" role="tabpanel" aria-labelledby="pills-employee-tab">
-                            <table id="tableDetailEducation" class="table table-hover">
-                                <thead>
-                                    <tr>
-                                        <th>University Name</th>
-                                        <th>Degree</th>
-                                        <th>GPA</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="GridEducationDetail">
-                                </tbody>
-                            </table>
-                        </div>
+                    <div id="innerDetailEmployee" class="card-body">
+                        <form id="formEditEmployee" class="needs-validation" novalidate>
+                            <div>
+                                <div class="form-row">
+                                    <div class="col-md-4 mb-3">
+                                        <label for="formFirstName">First name</label>
+                                        <input type="text" class="form-control" readonly id="formFirstName" value="Mark">
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label for="formLastName">Last name</label>
+                                        <input type="text" class="form-control" readonly id="formLastName" value="Otto">
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label for="formEmail">Email</label>
+                                        <input type="text" class="form-control" id="formEmail" placeholder="Email" value="someone@domain.com" required>
+                                        <div class="invalid-feedback">
+                                            Please provide an Email.
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="col-md-4 mb-3">
+                                        <label for="formNIK">NIK</label>
+                                        <input type="text" class="form-control" readonly id="formNIK" placeholder="12345" value="12345">
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label for="formSalary">Salary</label>
+                                        <input type="text" class="form-control" id="formSalary" placeholder="500000000" value="1000000" required>
+                                        <div class="invalid-feedback">
+                                            Please provide a Salary.
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="col-md-4 mb-3">
+                                        <label for="formPhone">Phone Number</label>
+                                        <input type="text" class="form-control" id="formPhone" placeholder="Phone" value="55555" required>
+                                        <div class="invalid-feedback">
+                                            Please provide a phone number.
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label for="formDate">Birth Date</label>
+                                        <input type="date" class="form-control" readonly id="formDate" required>
+                                    </div>
+                                    <div class="col-md-2 mb-3">
+                                        <label for="formGender">Gender</label>
+                                        <input type="text" class="form-control" id="formGender" readonly placeholder="Gender" value="Male">
+                                    </div>
+                                </div>
+                            </div>
+                            <button class="btn btn-primary" type="submit" onclick="showToast()">Update data</button>
+                        </form>
                     </div>
-                    <div class="tab-pane fade" id="pills-roles" role="tabpanel" aria-labelledby="pills-roles-tab">
-                        <<table id="tableDetailRoles" class="table table-hover">
-                            <thead>
-                                <tr>
-                                    <th>Role Name</th>
-                                    <th>Status</th>
-                                </tr>
-                            </thead>
-                            <tbody id="GridRolesDetail">
-                            </tbody>
-                        </table>
+                </div>
+                <div id="cardDetailEducation" class="card mb-2">
+                    <div class="card-header" data-toggle="collapse" data-target="#innerDetailEducation" aria-expanded="true">
+                        Education Details
+                    </div>
+                    <div id="innerDetailEducation" class="card-body">
+                        <form id="formEditEducation" class="needs-validation" novalidate>
+                            <div>
+                                <div class="form-row mt-2">
+                                    <div class="col-md-4 mb-3">
+                                        <label for="formUniversity">University</label>
+                                        <select id="formUniversity" class="form-control" required>
+                                            <option value=1>Universitas Pokemon</option>
+                                            <option value=2>GachArena</option>
+                                            <option value=3>Poke Institute</option>
+                                        </select>
+                                        <div class="invalid-feedback">
+                                            Please choose a University.
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2 mb-3">
+                                        <label for="formDegree">Degree</label>
+                                        <select id="formDegree" class="form-control" required>
+                                            <option value=1>D3</option>
+                                            <option value=2>D4</option>
+                                            <option value=3>S1</option>
+                                            <option value=4>S2</option>
+                                            <option value=5>S3</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-2 mb-3">
+                                        <label for="formGPA">GPA</label>
+                                        <input type="text" class="form-control" id="formGPA" placeholder="GPA" value="3.50" required>
+                                    </div>
+                                </div>
+                            </div>
+                            <button class="btn btn-primary" type="submit">Update data</button>
+                        </form>
+                    </div>
+                </div>
+                <div id="cardDetailRoles" class="card mb-3">
+                    <div class="card-header" data-toggle="collapse" data-target="#innerDetailRoles" aria-expanded="true">
+                        Roles Assignment
+                    </div>
+                    <div id="innerDetailRoles" class="card-body">
+                        <h2 id="innerDetailRolesPlaceholder"></h2>
                     </div>
                 </div>
             </div>
@@ -219,6 +279,8 @@
     </div>
 </div>
 
+
+
 <script>
     // Example starter JavaScript for disabling form submissions if there are invalid fields
     (function () {
@@ -238,4 +300,8 @@
             });
         }, false);
     })();
+
+    function showToast() {
+        $('.toast').toast('show');
+    }
 </script>

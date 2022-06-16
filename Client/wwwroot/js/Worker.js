@@ -20,47 +20,51 @@ function getDetails(nik) {
     }).done((res) => {
         console.log(res);
 
-        let empDetail = "";
-        empDetail += `
-                                <tr>
-                                    <td>${res.nik}</td>
-                                    <td>${res.firstName}</td>
-                                    <td>${res.lastName}</td>
-                                    <td>${res.email}</td>
-                                    <td>${res.phone}</td>
-                                    <td>${res.birthDate}</td>
-                                    <td>${res.salary}</td>
-                                    <td>${res.gender}</td>
-                                    <td>IsDeleted</td>
-                                </tr>`;
+        //Edit Employee Data
+        document.getElementById("formFirstName").value = toPascalCase(res.firstName);
+        document.getElementById("formLastName").value = toPascalCase(res.lastName);
+        document.getElementById("formEmail").value = res.email;
+        document.getElementById("formPhone").value = res.phone;
+        document.getElementById("formDate").value = moment(res.birthDate).format('yyyy-MM-DD');
+        document.getElementById("formNIK").value = res.nik;
+        document.getElementById("formSalary").value = res.salary;
+        document.getElementById("formGender").value = res.gender;
 
-        let eduDegree = res.educationDegree;
-        let eduGPA = res.educationGPA;
-        let uniName = res.universityName;
-        let eduDetail = "";
-
-        for (var i = 0; i < eduDegree.length; i++) {
-            eduDetail += `          <tr>
-                                    <td>${uniName[i]}</td>
-                                    <td>${eduDegree[i]}</td>
-                                    <td>${eduGPA[i]}</td>
-                                </tr>`;
+        //Edit Education Data
+        let uniId = 1;
+        if (res.universityName[0] === "Universitas Pokemon") {
+            uniId = 1;
         }
+        else if (res.universityName[0] === "GachArena") {
+            uniId = 2;
+        }
+        else {
+            uniId = 3;
+        }
+        document.getElementById("formUniversity").value = uniId;
 
+        let degreeId = 1;
+        if (res.educationDegree[0] === "D3") { degreeId = 1; }
+        else if (res.educationDegree[0] === "D4") { degreeId = 2; }
+        else if (res.educationDegree[0] === "S1") { degreeId = 3;}
+        else if (res.educationDegree[0] === "S2") { degreeId = 4;}
+        else { degreeId = 5}
+        document.getElementById("formDegree").value = degreeId;
+        document.getElementById("formGPA").value = res.educationGPA[0];
+
+        //Preview Roles Data
         let roleList = res.roleName;     
         let roleDetail = "";
 
         for (var i = 0; i < roleList.length; i++) {
-            roleDetail += `         <tr>
-                                    <td>${roleList[i]}</td>
-                                    <td>IsDeleted</td>
-                                </tr>`;
+            roleDetail += `         <span class="badge badge-success">${roleList[i]}</span>`;
         }
-        
 
-        $("#GridEmployeeDetail").html(empDetail);
-        $("#GridEducationDetail").html(eduDetail);
-        $("#GridRolesDetail").html(roleDetail);
+        let empName = toPascalCase(res.firstName) + " " + toPascalCase(res.lastName);
+        let title = `<h5 class="modal-title" id="modalEmployeeTitle">${res.nik} - ${empName}</h5>`;
+
+        $("#modalEmployeeTitle").html(title);
+        $("#innerDetailRolesPlaceholder").html(roleDetail);
         //console.log(obj);
     });
 }
@@ -86,7 +90,7 @@ function registerData(firstName, lastName, email, phone, gender, birthDate, degr
 
     $.ajax({
         type: "POST",
-        url: "https://localhost:44309/api/Employees/Register",
+        url: "https://localhost:44309/api/Employees/RegisterEmp",
         data: JSON.stringify(objReq),
         contentType: "application/json; charset=utf-8",
         crossDomain: true,
@@ -95,6 +99,43 @@ function registerData(firstName, lastName, email, phone, gender, birthDate, degr
         }
     }).done((res) => {
         return res;
+    });
+}
+
+function editEmployeeData(nik, firstName, lastName, email, phone, gender, birthDate, salary) {
+    let objReq = {
+        NIK: nik,
+        FirstName: firstName,
+        LastName: lastName,
+        Email: email,
+        Phone: phone,
+        Gender: gender,
+        BirthDate: birthDate,
+        Salary: parseFloat(salary)
+    }
+
+    console.log(objReq);
+
+    $.ajax({
+        type: "POST",
+        url: "https://localhost:44309/api/Employees/UpdateEmp",
+        data: JSON.stringify(objReq),
+        contentType: "application/json; charset=utf-8",
+        crossDomain: true,
+        headers: {
+            'Access-Control-Allow-Origin': '*',
+        }
+    }).done((res) => {
+        console.log(res);
+
+        if (res.statusCode === 200) {
+            alert('Update succes!')
+        }
+        else {
+            alert('Update gagal!')
+        }
+
+        return true;
     });
 }
 
@@ -113,7 +154,6 @@ $(document).ready(function () {
                 { extend: 'pdf', className: 'ml-1 mr-1' }
             ]
         },
-        
         columns: [
             {
                 data: 'nik',
@@ -123,17 +163,10 @@ $(document).ready(function () {
                 }
             },
             {
-                data: 'firstName',
-                render: function (data)
-                {
-                    return '<span>' + toPascalCase(data) + '</span>';
-                }
+                data: 'firstName'
             },
             {
-                data: 'lastName',
-                render: function (data) {
-                    return '<span>' + toPascalCase(data) + '</span>';
-                }
+                data: 'lastName'
             },
             {
                 data: 'email'
@@ -150,15 +183,27 @@ $(document).ready(function () {
                     return '<span>' + date.format('DD/MM/YYYY') + '</span>';
                 }
             },
-            {
-                data: 'salary',
-                render: function (data, type) {
-                    var number = $.fn.dataTable.render
-                        .number(',', '.', 2, 'Rp. ')
-                        .display(data);
+            //{
+            //    data: 'salary',
+            //    render: function (data, type) {
+            //        var number = $.fn.dataTable.render
+            //            .number(',', '.', 2, 'Rp. ')
+            //            .display(data);
 
-                    return '<span>' + number + '</span>';
-                }
+            //        return '<span>' + number + '</span>';
+            //    }
+            //}
+        ],
+        columnDefs: [
+            {
+                targets: [1],
+                render: function (data, type, row) {
+                    return toPascalCase(data) + ' ' + toPascalCase(row.lastName) + '';
+                },
+                width: "20%"
+            },
+            {
+                visible: false, targets: [2]
             }
         ],
     });
@@ -263,6 +308,44 @@ $("#formRegisterEmployee").submit(function (e) {
         table.ajax.reload();
 
         $('#modalForm').modal('toggle');
+
+        return true;
+    }
+    return false;
+})
+$("#formEditEmployee").submit(function (e) {
+    console.log("Masuk submit");
+    e.preventDefault();
+
+    const form = $(this);
+
+    const FIELD_REQUIRED = "This field is required.";
+    const EMAIL_INVALID = "Please enter a valid email address format.";
+
+    console.log(form);
+    let emailValid = validateEmail(document.getElementById("formEmail").value, FIELD_REQUIRED, EMAIL_INVALID);
+    let emailDuplicate = validateDuplicateData(document.getElementById("formEmail").value, "email");
+    let phoneDuplicate = validateDuplicateData(document.getElementById("validationCustom03").value, "phone");
+    if (emailValid && !emailDuplicate && !phoneDuplicate) {
+        //Bisa post
+        let nik = document.getElementById("formNIK").value;
+        let firstName = document.getElementById("formFirstName").value;
+        let lastName = document.getElementById("formLastName").value;
+        let email = document.getElementById("formEmail").value;
+        let phone = document.getElementById("formPhone").value;
+        let gender = document.getElementById("formGender").value;
+        let birthDate = document.getElementById("formDate").value;
+        let salary = document.getElementById("formSalary").value;
+
+        let res = editEmployeeData(nik, firstName, lastName, email, phone, gender, birthDate, salary);
+
+        let table = document.getElementById("tableGridWorkerList");
+        table.ajax.reload();
+
+        let toastText = `Employee Data successfully updated!`;
+
+        // TODO Tampilin Toast
+        $('#divToastBody').innerHTML = toastText;
 
         return true;
     }
