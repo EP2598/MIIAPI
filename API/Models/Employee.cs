@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -7,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace API.Models
 {
+    [JsonObject(IsReference = true)]
     public partial class Employee
     {
         [Key]

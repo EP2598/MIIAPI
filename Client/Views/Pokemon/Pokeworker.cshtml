@@ -3,6 +3,8 @@
     Layout = "LayoutIndex";
 }
 
+<button type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#modalForm">Add</button>
+
 <table id="tableGridWorkerList" class="table table-hover">
     <thead>
         <tr>
@@ -31,7 +33,7 @@
 </table>
 
 <div class="modal fade" id="modalEmployee" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+    <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="modalTitle">Modal title</h5>
@@ -69,19 +71,6 @@
                             </thead>
                             <tbody id="GridEmployeeDetail">
                             </tbody>
-                            <tfoot>
-                                <tr>
-                                    <th>NIK</th>
-                                    <th>First Name</th>
-                                    <th>Last Name</th>
-                                    <th>Email</th>
-                                    <th>Phone</th>
-                                    <th>Birthdate</th>
-                                    <th>Salary</th>
-                                    <th>Gender</th>
-                                    <th>Status</th>
-                                </tr>
-                            </tfoot>
                         </table>
                     </div>
                     <div class="tab-pane fade" id="pills-education" role="tabpanel" aria-labelledby="pills-education-tab">
@@ -96,13 +85,6 @@
                                 </thead>
                                 <tbody id="GridEducationDetail">
                                 </tbody>
-                                <tfoot>
-                                    <tr>
-                                        <th>University Name</th>
-                                        <th>Degree</th>
-                                        <th>GPA</th>
-                                    </tr>
-                                </tfoot>
                             </table>
                         </div>
                     </div>
@@ -116,12 +98,6 @@
                             </thead>
                             <tbody id="GridRolesDetail">
                             </tbody>
-                            <tfoot>
-                                <tr>
-                                    <th>Role Name</th>
-                                    <th>Status</th>
-                                </tr>
-                            </tfoot>
                         </table>
                     </div>
                 </div>
@@ -129,3 +105,137 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="modalForm" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalTitle">Insert New Employee</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div id="modalFormBody" class="modal-body">
+                <form id="formRegisterEmployee" class="needs-validation"  novalidate>
+                    <h3 data-toggle="collapse" data-target="#divEmployeeSection"> [-] Employee Data</h3>
+                    <div id="divEmployeeSection">
+                        <div class="form-row">
+                            <div class="col-md-4 mb-3">
+                                <label for="validationCustom01">First name</label>
+                                <input type="text" class="form-control" id="validationCustom01" placeholder="First name" value="Mark" required>
+                                <div class="valid-feedback">
+                                    Looks good!
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="validationCustom02">Last name</label>
+                                <input type="text" class="form-control" id="validationCustom02" placeholder="Last name" value="Otto" required>
+                                <div class="valid-feedback">
+                                    Looks good!
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="validationCustomUsername">Email</label>
+                                <input type="text" class="form-control" id="validationCustomEmail" placeholder="Email" value="someone@domain.com" required>
+                                <div class="invalid-feedback">
+                                    Please provide an Email.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row border-bottom">
+                            <div class="col-md-4 mb-3">
+                                <label for="validationCustom03">Phone Number</label>
+                                <input type="text" class="form-control" id="validationCustom03" placeholder="Phone" required>
+                                <div class="invalid-feedback">
+                                    Please provide a phone number.
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="validationCustom04">Birth Date</label>
+                                <input type="date" class="form-control" id="validationCustom04" required>
+                                <div class="invalid-feedback">
+                                    Please choose a valid date.
+                                </div>
+                            </div>
+                            <div class="col-md-2 mb-3">
+                                <label for="inputGender">Gender</label>
+                                <select id="inputGender" class="form-control" required>
+                                    <option value="Male" selected>Male</option>
+                                    <option value="Female">Female</option>
+                                </select>
+                                <div class="invalid-feedback">
+                                    Please choose a Gender.
+                                </div>
+                                <div class="valid-feedback">
+                                    Looks good!
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <h3 data-toggle="collapse" data-target="#divEducationSection"> [-] Education Data</h3>
+                    <div id="divEducationSection" class="form-row mt-2">
+                        <div class="col-md-4 mb-3">
+                            <label for="inputUniversity">University</label>
+                            <select id="inputUniversity" class="form-control" required>
+                                <option value="1" selected>Universitas Pokemon</option>
+                                <option value="2">GachArena</option>
+                                <option value="3">Poke Institute</option>
+                            </select>
+                            <div class="invalid-feedback">
+                                Please choose a University.
+                            </div>
+                            <div class="valid-feedback">
+                                Looks good!
+                            </div>
+                        </div>
+                        <div class="col-md-2 mb-3">
+                            <label for="inputDegree">Degree</label>
+                            <select id="inputDegree" class="form-control" required>
+                                <option value="1" selected>D3</option>
+                                <option value="2" >D4</option>
+                                <option value="3" >S1</option>
+                                <option value="4" >S2</option>
+                                <option value="5" >S3</option>
+                            </select>
+                            <div class="invalid-feedback">
+                                Please choose a Degree.
+                            </div>
+                            <div class="valid-feedback">
+                                Looks good!
+                            </div>
+                        </div>
+                        <div class="col-md-2 mb-3">
+                            <label for="validationCustom05">GPA</label>
+                            <input type="text" class="form-control" id="validationCustom05" placeholder="GPA" value="3.50" required>
+                            <div class="valid-feedback">
+                                Looks good!
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" type="submit">Submit form</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Example starter JavaScript for disabling form submissions if there are invalid fields
+    (function () {
+        'use strict';
+        window.addEventListener('load', function () {
+            // Fetch all the forms we want to apply custom Bootstrap validation styles to
+            var forms = document.getElementsByClassName('needs-validation');
+            // Loop over them and prevent submission
+            var validation = Array.prototype.filter.call(forms, function (form) {
+                form.addEventListener('submit', function (event) {
+                    if (form.checkValidity() === false) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        }, false);
+    })();
+</script>

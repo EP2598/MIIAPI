@@ -55,42 +55,86 @@ namespace API.Repository.Data
             return listRegisteredEmp;
         }
 
-        public List<Employee> GetEmployeeData()
+        public List<GetEmployeeResponseVM> GetEmployeeData()
         {
+            List<GetEmployeeResponseVM> listObjResponse = new List<GetEmployeeResponseVM>();
             List<Employee> listEmp = new List<Employee>();
 
             listEmp = (from a in _context.Employees select a).ToList();
 
-            return listEmp;
+            for (int i = 0; i < listEmp.Count; i++)
+            {
+                GetEmployeeResponseVM objResponse = new GetEmployeeResponseVM();
+
+                objResponse.NIK = listEmp[i].NIK;
+                objResponse.FirstName = listEmp[i].FirstName;
+                objResponse.LastName = listEmp[i].LastName;
+                objResponse.Email = listEmp[i].Email;
+                objResponse.Phone = listEmp[i].Phone;
+                objResponse.BirthDate = listEmp[i].BirthDate;
+                objResponse.Salary = listEmp[i].Salary;
+                objResponse.Gender = Enum.GetName(typeof(Gender), listEmp[i].Gender);
+
+                listObjResponse.Add(objResponse);
+            }
+
+            return listObjResponse;
         }
 
         public GetEmployeeResponseVM GetEmployeeByNIK(string NIK)
         {
             GetEmployeeResponseVM objResponse = new GetEmployeeResponseVM();
 
-            Employee obj = _context.Employees.Find(NIK);
-            ICollection<Roles> roleList = (from a in _context.AccountRoles
-                                           join b in _context.Roles
-                                           on a.RolesId equals b.RolesId
-                                           where a.NIK == NIK
-                                           select b).ToList();
-            ICollection<Education> eduList = (from a in _context.Profilings
-                                              join b in _context.Educations
-                                              on a.Education_Id equals b.Id
-                                              where a.NIK == NIK
-                                              select b).ToList();
+            #region Get Employee Data
+            Employee empObj = _context.Employees.Find(NIK);
+            objResponse.NIK = empObj.NIK;
+            objResponse.FirstName = empObj.FirstName;
+            objResponse.LastName = empObj.LastName;
+            objResponse.Email = empObj.Email;
+            objResponse.Phone = empObj.Phone;
+            objResponse.BirthDate = empObj.BirthDate;
+            objResponse.Salary = empObj.Salary;
+            objResponse.Gender = Enum.GetName(typeof(Gender), empObj.Gender);
+            #endregion
 
-            ICollection<University> uniList = (from a in eduList
-                                               join b in _context.Universities
-                                               on a.University_Id equals b.Id
-                                               select b).ToList();
+            #region Get Education Data
+            List<string> eduDegree = new List<string>();
+            List<string> eduGPA = new List<string>();
 
-            objResponse.Employee = obj;
-            objResponse.Account = obj.Account;
-            objResponse.Roles = roleList;
-            objResponse.Educations = eduList;
-            objResponse.Universities = uniList;
-            
+            List<Education> eduList = (from a in _context.Educations
+                                       join b in _context.Profilings
+                                       on a.Id equals b.Education_Id
+                                       where b.NIK == NIK
+                                       select a).ToList();
+            List<string> uniList = new List<string>();
+
+
+            for (int i = 0; i < eduList.Count; i++)
+            {
+                eduDegree.Add(Enum.GetName(typeof(Degree), eduList[i].Degree));
+                eduGPA.Add(eduList[i].GPA);
+
+                string uniName = (from a in _context.Universities
+                                  where a.Id == eduList[i].University_Id
+                                  select a.Name).FirstOrDefault();
+                uniList.Add(uniName);
+            }
+
+            objResponse.UniversityName = uniList;
+            objResponse.EducationDegree = eduDegree;
+            objResponse.EducationGPA = eduGPA;
+            #endregion
+
+            #region Get Roles Data
+            List<string> roleList = (from a in _context.AccountRoles
+                                     join b in _context.Roles
+                                     on a.RolesId equals b.RolesId
+                                     where a.NIK == NIK
+                                     select b.RoleName).ToList();
+
+            objResponse.RoleName = roleList; 
+            #endregion
+
             return objResponse;
         }
                 
@@ -120,7 +164,7 @@ namespace API.Repository.Data
                 Account accObj = new Account
                 {
                     Password = BC.HashPassword(obj.Password),
-                    Employee = emp
+                    NIK = emp.NIK
                 };
                 #endregion
 
@@ -129,37 +173,38 @@ namespace API.Repository.Data
                 {
                     Degree = (Degree)obj.Degree,
                     GPA = obj.GPA,
-                    University = _context.Universities.Find(obj.UniversityId)
+                    University_Id = obj.UniversityId
                 };
                 #endregion
 
                 #region Profiling Object
                 Profiling profilingObj = new Profiling
                 {
-                    Education = eduObj,
-                    Account = accObj
+                    Education_Id = eduObj.Id,
+                    NIK = emp.NIK
                 };
                 #endregion
 
                 #region AccountRoles Object
                 AccountRoles accRolesObj = new AccountRoles
                 {
-                    Account = accObj,
-                    Roles = _context.Roles.Find(3)
+                    NIK = emp.NIK,
+                    RolesId = 3
                 };
                 #endregion
 
-                //#region Connect object
-                //profilingObj.Education = eduObj;
-                //accObj.Profiling = profilingObj;
-                //accRolesObj.Account = accObj;
-                //emp.Account = accObj; 
-                //#endregion
+                #region Connect object
+                profilingObj.Education = eduObj;
+                accObj.Profiling = profilingObj;
+                accRolesObj.Account = accObj;
+                accRolesObj.Roles = (from a in _context.Roles where a.RolesId == 3 select a).FirstOrDefault();
+                emp.Account = accObj;
+                #endregion
 
                 try
                 {
                     _context.Employees.Add(emp);
-                    //_context.Add(accRolesObj);
+                    _context.Add(accRolesObj);
                     insertRes = _context.SaveChanges();
                     insertRes = 200;
                 }

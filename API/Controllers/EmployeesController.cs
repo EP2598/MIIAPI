@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,6 +31,7 @@ namespace API.Controllers
 
         [HttpPost]
         [Route("Register")]
+        [EnableCors("AllowOrigin")]
         public ActionResult Register(RegisterVM obj)
         {
             var codeRes = _empRepos.Register(obj);
@@ -101,15 +103,8 @@ namespace API.Controllers
         public ActionResult GetEmployeeDetail(GetEmployeeParameterVM obj)
         {
             GetEmployeeResponseVM objResponse = _empRepos.GetEmployeeByNIK(obj.NIK);
-            return StatusCode(objResponse == null ? 400 : 200,
-                new
-                {
-                    status =
-                        objResponse == null ? HttpStatusCode.BadRequest : HttpStatusCode.OK,
-                    message =
-                        objResponse == null ? "Not Found" : "Found",
-                    data = objResponse
-                });;
+
+            return Ok(objResponse);
         }
     }
 }
