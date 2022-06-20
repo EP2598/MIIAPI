@@ -30,21 +30,6 @@
     </tfoot>
 </table>
 
-<div id="divToast" aria-live="polite" aria-atomic="true" style="position: fixed; bottom:0px; right:0px; min-height: 200px;" data-delay="5000">
-    <div class="toast" style="position: absolute; top: 0; right: 0;">
-        <div class="toast-header">
-            <img src="~/img/logo.png" style="width:5px; height: 5px" class="rounded mr-2" alt="...">
-            <strong class="mr-auto">Information</strong>
-            <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-        <div id="divToastBody" class="toast-body">
-
-        </div>
-    </div>
-</div>
-
 <div class="modal fade" id="modalEmployee" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -60,7 +45,7 @@
                         Employee Details
                     </div>
                     <div id="innerDetailEmployee" class="card-body">
-                        <form id="formEditEmployee" class="needs-validation" novalidate>
+                        <form id="formEditEmployee" class="needs-validation" onsubmit="return true" novalidate>
                             <div>
                                 <div class="form-row">
                                     <div class="col-md-4 mb-3">
@@ -73,9 +58,9 @@
                                     </div>
                                     <div class="col-md-4 mb-3">
                                         <label for="formEmail">Email</label>
-                                        <input type="text" class="form-control" id="formEmail" placeholder="Email" value="someone@domain.com" required>
-                                        <div class="invalid-feedback">
-                                            Please provide an Email.
+                                        <input type="email" class="form-control" id="formEmail" placeholder="Email" value="someone@domain.com" required>
+                                        <div id="invalidEmailUpdate" class="invalid-feedback">
+                                            Please provide a valid Email.
                                         </div>
                                     </div>
                                 </div>
@@ -110,7 +95,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <button class="btn btn-primary" type="submit" onclick="showToast()">Update data</button>
+                            <button class="btn btn-primary" type="submit">Update data</button>
                         </form>
                     </div>
                 </div>
@@ -119,7 +104,7 @@
                         Education Details
                     </div>
                     <div id="innerDetailEducation" class="card-body">
-                        <form id="formEditEducation" class="needs-validation" novalidate>
+                        <form id="formEditEducation" class="needs-validation" onsubmit="return true" novalidate>
                             <div>
                                 <div class="form-row mt-2">
                                     <div class="col-md-4 mb-3">
@@ -162,6 +147,9 @@
                     </div>
                 </div>
             </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary">Delete</button>
+            </div>
         </div>
     </div>
 </div>
@@ -176,7 +164,7 @@
                 </button>
             </div>
             <div id="modalFormBody" class="modal-body">
-                <form id="formRegisterEmployee" class="needs-validation"  novalidate>
+                <form id="formRegisterEmployee" class="needs-validation" onsubmit="return true" novalidate>
                     <h3 id="headerEmployeeSection" data-toggle="collapse" data-target="#divEmployeeSection" aria-expanded="true"> [-] Employee Data</h3>
                     <div id="divEmployeeSection">
                         <div class="form-row">
@@ -233,42 +221,44 @@
                         </div>
                     </div>
                     <h3 id="headerEducationSection" data-toggle="collapse" data-target="#divEducationSection" aria-expanded="false"> [-] Education Data</h3>
-                    <div id="divEducationSection" class="form-row mt-2">
-                        <div class="col-md-4 mb-3">
-                            <label for="inputUniversity">University</label>
-                            <select id="inputUniversity" class="form-control" required>
-                                <option value="1" selected>Universitas Pokemon</option>
-                                <option value="2">GachArena</option>
-                                <option value="3">Poke Institute</option>
-                            </select>
-                            <div class="invalid-feedback">
-                                Please choose a University.
+                    <div id="divEducationSection">
+                        <div id="divInnerEducation" class="form-education form-row mt-2">
+                            <div class="col-md-4 mb-3">
+                                <label for="inputUniversity">University</label>
+                                <select id="inputUniversity" class="form-control" required>
+                                    <option value="1" selected>Universitas Pokemon</option>
+                                    <option value="2">GachArena</option>
+                                    <option value="3">Poke Institute</option>
+                                </select>
+                                <div class="invalid-feedback">
+                                    Please choose a University.
+                                </div>
+                                <div class="valid-feedback">
+                                    Looks good!
+                                </div>
                             </div>
-                            <div class="valid-feedback">
-                                Looks good!
+                            <div class="col-md-2 mb-3">
+                                <label for="inputDegree">Degree</label>
+                                <select id="inputDegree" class="form-control" required>
+                                    <option value="1" selected>D3</option>
+                                    <option value="2">D4</option>
+                                    <option value="3">S1</option>
+                                    <option value="4">S2</option>
+                                    <option value="5">S3</option>
+                                </select>
+                                <div class="invalid-feedback">
+                                    Please choose a Degree.
+                                </div>
+                                <div class="valid-feedback">
+                                    Looks good!
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-md-2 mb-3">
-                            <label for="inputDegree">Degree</label>
-                            <select id="inputDegree" class="form-control" required>
-                                <option value="1" selected>D3</option>
-                                <option value="2" >D4</option>
-                                <option value="3" >S1</option>
-                                <option value="4" >S2</option>
-                                <option value="5" >S3</option>
-                            </select>
-                            <div class="invalid-feedback">
-                                Please choose a Degree.
-                            </div>
-                            <div class="valid-feedback">
-                                Looks good!
-                            </div>
-                        </div>
-                        <div class="col-md-2 mb-3">
-                            <label for="validationCustom05">GPA</label>
-                            <input type="text" class="form-control" id="validationCustom05" placeholder="GPA" value="3.50" required>
-                            <div class="valid-feedback">
-                                Looks good!
+                            <div class="col-md-2 mb-3">
+                                <label for="validationCustom05">GPA</label>
+                                <input type="text" class="form-control" id="validationCustom05" placeholder="GPA" value="3.50" required>
+                                <div class="valid-feedback">
+                                    Looks good!
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -279,6 +269,18 @@
     </div>
 </div>
 
+<div class="toast" style="position: fixed; bottom: 0; right: 0;" data-delay="6000">
+    <div class="toast-header">
+        <img src="~/img/logo.png" style="width:5px; height: 5px" class="rounded mr-2" alt="...">
+        <strong class="mr-auto">Information</strong>
+        <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div id="divToastBody" class="toast-body">
+
+    </div>
+</div>
 
 
 <script>
@@ -300,8 +302,4 @@
             });
         }, false);
     })();
-
-    function showToast() {
-        $('.toast').toast('show');
-    }
 </script>

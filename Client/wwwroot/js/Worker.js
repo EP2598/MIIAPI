@@ -69,6 +69,83 @@ function getDetails(nik) {
     });
 }
 
+//function addEducationSection() {
+//    var eduDiv = document.getElementById("divEducationSection");
+
+//    var lastDiv = $('.form-education').length;
+    
+//    lastDiv++;
+//    console.log(lastDiv);
+
+
+//    let eduSection = `<div id="divInnerEducation${lastDiv}" class="form-education form-row mt-2">
+//                            <div class="col-md-4 mb-3">
+//                                <label for="inputUniversity${lastDiv}">University</label>
+//                                <select id="inputUniversity${lastDiv}" class="form-control" required>
+//                                    <option value="1" selected>Universitas Pokemon</option>
+//                                    <option value="2">GachArena</option>
+//                                    <option value="3">Poke Institute</option>
+//                                </select>
+//                                <div class="invalid-feedback">
+//                                    Please choose a University.
+//                                </div>
+//                                <div class="valid-feedback">
+//                                    Looks good!
+//                                </div>
+//                            </div>
+//                            <div class="col-md-2 mb-3">
+//                                <label for="inputDegree${lastDiv}">Degree</label>
+//                                <select id="inputDegree${lastDiv}" class="form-control" required>
+//                                    <option value="1" selected>D3</option>
+//                                    <option value="2">D4</option>
+//                                    <option value="3">S1</option>
+//                                    <option value="4">S2</option>
+//                                    <option value="5">S3</option>
+//                                </select>
+//                                <div class="invalid-feedback">
+//                                    Please choose a Degree.
+//                                </div>
+//                                <div class="valid-feedback">
+//                                    Looks good!
+//                                </div>
+//                            </div>
+//                            <div class="col-md-2 mb-3">
+//                                <label for="validationCustom05${lastDiv}">GPA</label>
+//                                <input type="text" class="form-control" id="validationCustom05${lastDiv}" placeholder="GPA" value="3.50" required>
+//                                <div class="valid-feedback">
+//                                    Looks good!
+//                                </div>
+//                            </div>
+//                        </div>`;
+
+//    eduDiv.innerHTML += eduSection;
+
+//    document.getElementById("btnDelEdu").disabled = false;
+//}
+
+//function delEducationSection() {
+//    var eduDiv = document.getElementById("divEducationSection");
+
+//    var lastDiv = $('.form-education').length;
+//    console.log(lastDiv);
+
+//    let eduSectionName = "divInnerEducation" + lastDiv;
+//    console.log(eduSectionName);
+
+//    let lastEduSection = document.getElementById(eduSectionName);
+//    console.log(lastEduSection);
+
+//    lastEduSection.parentElement.removeChild(lastEduSection);
+
+//    if (lastDiv - 1 === 0) {
+//        document.getElementById("btnDelEdu").disabled = true;
+//    }
+//    else {
+//        document.getElementById("btnDelEdu").disabled = false;
+//    }
+    
+//}
+
 function registerData(firstName, lastName, email, phone, gender, birthDate, degree, gpa, university)
 {
     console.log("Masuk proses post");
@@ -128,15 +205,92 @@ function editEmployeeData(nik, firstName, lastName, email, phone, gender, birthD
     }).done((res) => {
         console.log(res);
 
+        let toastText = "";
+
         if (res.statusCode === 200) {
-            alert('Update succes!')
+            toastText = `<span>Employee Data successfully updated!</span>`;
         }
         else {
-            alert('Update gagal!')
+            toastText = `<span>Employee Data failed to update!</span>`;
         }
+
+        showToast(toastText);
 
         return true;
     });
+}
+
+function editEducationData(nik, universityId, degree, gpa) {
+    let objReq = {
+        NIK: nik,
+        UniversityId: universityId,
+        Degree: degree,
+        GPA: gpa
+    }
+
+    console.log(objReq);
+
+    $.ajax({
+        type: "POST",
+        url: "https://localhost:44309/api/Employees/UpdateEducation",
+        data: JSON.stringify(objReq),
+        contentType: "application/json; charset=utf-8",
+        crossDomain: true,
+        headers: {
+            'Access-Control-Allow-Origin': '*',
+        }
+    }).done((res) => {
+        console.log(res);
+
+        let toastText = "";
+
+        if (res.statusCode === 200) {
+            toastText = `<span>Education Data successfully updated!</span>`;
+        }
+        else {
+            toastText = `<span>Education Data failed to update!</span>`;
+        }
+
+        showToast(toastText);
+
+        return true;
+    });
+}
+
+function deleteEmployee() {
+    let nik = document.getElementById("formNIK").value;
+
+    let objReq = { NIK: nik }
+
+    $.ajax({
+        type: "POST",
+        url: "https://localhost:44309/api/Employees/DeleteEmployee",
+        data: JSON.stringify(objReq),
+        contentType: "application/json; charset=utf-8",
+        crossDomain: true,
+        headers: {
+            'Access-Control-Allow-Origin': '*',
+        }
+    }).done((res) => {
+        console.log(res);
+
+        let toastText = "";
+
+        if (res.statusCode === 200) {
+            toastText = `<span>Data successfully deleted!</span>`;
+        }
+        else {
+            toastText = `<span>Data failed to delete!</span>`;
+        }
+
+        showToast(toastText);
+
+        return true;
+    });
+
+    $('#tableGridWorkerList').DataTable.ajax.reload();
+
+    $('#modalEmployee').modal('toggle');
 }
 
 $(document).ready(function () {
@@ -149,9 +303,27 @@ $(document).ready(function () {
         dom: 'lBfrtip',
         buttons: {
             buttons: [
-                { extend: 'csv', className: 'ml-1 mr-1' },
-                { extend: 'excel', className: 'ml-1 mr-1' },
-                { extend: 'pdf', className: 'ml-1 mr-1' }
+                {
+                    extend: 'csv',
+                    className: 'ml-1 mr-1',
+                    exportOptions: {
+                        columns: [0, 1, 3, 4, 5]
+                    }
+                },
+                {
+                    extend: 'excel',
+                    className: 'ml-1 mr-1',
+                    exportOptions: {
+                        columns: [0, 1, 3, 4, 5]
+                    }
+                },
+                {
+                    extend: 'pdf',
+                    className: 'ml-1 mr-1',
+                    exportOptions: {
+                        columns: [0, 1, 3, 4, 5]
+                    }
+                }
             ]
         },
         columns: [
@@ -206,6 +378,19 @@ $(document).ready(function () {
                 visible: false, targets: [2]
             }
         ],
+    });
+    $('#formEditEmployee').validate({
+        rules: {
+            formEmail: {
+                required: true,
+                email: true
+            }
+        },
+        message: {
+            formEmail: {
+                email: "Format email yang diterima adalah abc@domain.com"
+            }
+        }
     });
 });
 
@@ -275,6 +460,13 @@ function validateDuplicateData(input, type) {
 
 }
 
+function showToast(msg) {
+    $('#divToastBody').html(msg);
+    $('#modalForm').modal('hide');
+    $('#modalEmployee').modal('hide');
+    $('.toast').toast('show');
+}
+
 $("#formRegisterEmployee").submit(function (e) {
     console.log("Masuk submit");
     e.preventDefault();
@@ -289,7 +481,7 @@ $("#formRegisterEmployee").submit(function (e) {
     let emailDuplicate = validateDuplicateData(document.getElementById("validationCustomEmail").value, "email");
     let phoneDuplicate = validateDuplicateData(document.getElementById("validationCustom03").value, "phone");
     if (emailValid && !emailDuplicate && !phoneDuplicate) {
-        //Bisa post
+        //Set Employee Data
         let firstName = document.getElementById("validationCustom01").value;
         let lastName = document.getElementById("validationCustom02").value;
         let email = document.getElementById("validationCustomEmail").value;
@@ -304,10 +496,11 @@ $("#formRegisterEmployee").submit(function (e) {
 
         console.log(res);
 
-        let table = document.getElementById("tableGridWorkerList");
-        table.ajax.reload();
+        $('#tableGridWorkerList').DataTable.ajax.reload();
 
         $('#modalForm').modal('toggle');
+
+        form.submit();
 
         return true;
     }
@@ -339,17 +532,35 @@ $("#formEditEmployee").submit(function (e) {
 
         let res = editEmployeeData(nik, firstName, lastName, email, phone, gender, birthDate, salary);
 
-        let table = document.getElementById("tableGridWorkerList");
-        table.ajax.reload();
+        $('#tableGridWorkerList').DataTable.ajax.reload();
 
-        let toastText = `Employee Data successfully updated!`;
-
-        // TODO Tampilin Toast
-        $('#divToastBody').innerHTML = toastText;
+        form.submit();
 
         return true;
     }
+
     return false;
+})
+$("#formEditEducation").submit(function (e) {
+    console.log("Masuk submit");
+    e.preventDefault();
+
+    const form = $(this);
+
+    console.log(form);
+    //Bisa post
+    let nik = document.getElementById("formNIK").value;
+    let universityId = document.getElementById("formUniversity").value;
+    let degree = document.getElementById("formDegree").value;
+    let gpa = document.getElementById("formGPA").value;
+
+    let res = editEducationData(nik, universityId, degree, gpa);
+
+    $('#tableGridWorkerList').DataTable.ajax.reload();
+
+    form.submit();
+
+    return true;
 })
 
 $("#divEmployeeSection").on('hide.bs.collapse', function () {

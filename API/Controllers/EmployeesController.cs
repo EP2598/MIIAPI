@@ -58,6 +58,26 @@ namespace API.Controllers
         }
 
         [HttpPost]
+        [Route("UpdateEducation")]
+        [EnableCors("AllowOrigin")]
+        public ActionResult UpdateEducation(UpdateEducationVM obj)
+        {
+            ResponseObj objRes = _empRepos.UpdateEducation(obj);
+
+            return Ok(objRes);
+        }
+
+        [HttpPost]
+        [Route("DeleteEmployee")]
+        [EnableCors("AllowOrigin")]
+        public ActionResult DeleteEmployee(GetEmployeeParameterVM obj)
+        {
+            ResponseObj objRes = _empRepos.DeleteEmployee(obj);
+
+            return Ok(objRes);
+        }
+
+        [HttpPost]
         [Route("Delete")]
         public ActionResult DeleteEmp(string NIK)
         {

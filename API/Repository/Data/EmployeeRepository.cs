@@ -64,7 +64,7 @@ namespace API.Repository.Data
             List<GetEmployeeResponseVM> listObjResponse = new List<GetEmployeeResponseVM>();
             List<Employee> listEmp = new List<Employee>();
 
-            listEmp = (from a in _context.Employees select a).ToList();
+            listEmp = (from a in _context.Employees where a.IsDeleted == (IsDeleted)Enum.Parse(typeof(IsDeleted), "False") select a).ToList();
 
             for (int i = 0; i < listEmp.Count; i++)
             {
@@ -174,7 +174,62 @@ namespace API.Repository.Data
             
             return objRes;
         }
-                
+
+        public ResponseObj UpdateEducation(UpdateEducationVM objReq)
+        {
+            ResponseObj objRes = new ResponseObj();
+
+            Education eduObj = (from a in _context.Profilings
+                                join b in _context.Educations
+                                on a.Education_Id equals b.Id
+                                where a.NIK == objReq.NIK
+                                select b).FirstOrDefault();
+
+            eduObj.University_Id = objReq.UniversityId;
+            eduObj.Degree = objReq.Degree;
+            eduObj.GPA = objReq.GPA;
+
+            try
+            {
+                _context.SaveChanges();
+                objRes.statusCode = Convert.ToInt32(HttpStatusCode.OK);
+                objRes.message = "Success update";
+                objRes.data = null;
+            }
+            catch (Exception ex)
+            {
+                objRes.statusCode = Convert.ToInt32(HttpStatusCode.BadRequest);
+                objRes.message = "Failed update";
+                objRes.data = ex;
+            }
+
+            return objRes;
+        }
+        public ResponseObj DeleteEmployee(GetEmployeeParameterVM objReq)
+        {
+            ResponseObj objRes = new ResponseObj();
+
+            Employee empObj = (from a in _context.Employees where a.NIK == objReq.NIK select a).FirstOrDefault();
+
+            empObj.IsDeleted = (IsDeleted)Enum.Parse(typeof(IsDeleted), "True");
+
+            try
+            {
+                _context.SaveChanges();
+                objRes.statusCode = Convert.ToInt32(HttpStatusCode.OK);
+                objRes.message = "Success delete";
+                objRes.data = null;
+            }
+            catch (Exception ex)
+            {
+                objRes.statusCode = Convert.ToInt32(HttpStatusCode.BadRequest);
+                objRes.message = "Failed delete";
+                objRes.data = ex;
+            }
+
+            return objRes;
+        }
+
         public int Register(RegisterVM obj)
         {
             int insertRes = 400;
