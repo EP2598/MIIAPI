@@ -1,6 +1,8 @@
 ﻿using API.Base;
 using API.Models;
+using API.Models.API;
 using API.Repository.Data;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -17,6 +19,14 @@ namespace API.Controllers
         public UniversitiesController(UniversityRepository univRepos) : base(univRepos)
         {
             this._univRepos = univRepos;
+        }
+
+        [HttpGet("GetAlumniCount")]
+        [EnableCors("AllowOrigin")]
+        public ActionResult GetAlumniCount() {
+            ResponseObj objRes = _univRepos.GetAlumniCount();
+
+            return Ok(objRes);
         }
     }
 }

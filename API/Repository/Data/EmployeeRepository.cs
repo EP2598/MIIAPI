@@ -10,6 +10,7 @@ using API.Models.API;
 using BC = BCrypt.Net.BCrypt;
 using Microsoft.Extensions.Configuration;
 using System.Net;
+using API.Base;
 
 namespace API.Repository.Data
 {
@@ -83,6 +84,50 @@ namespace API.Repository.Data
             }
 
             return listObjResponse;
+        }
+
+        public ResponseObj GetGenderCount()
+        {
+            ResponseObj objRes = new ResponseObj();
+
+            GenderCountVM obj = new GenderCountVM();
+
+            List<string> genName = new List<string>();
+            List<int> genCount = new List<int>();
+
+            try
+            {
+                var req = (from a in _context.Employees
+                           where a.IsDeleted == 0
+                           group a by a.Gender into aGender
+                           select new
+                           {
+                               GenderName = aGender.Key == 0 ? "Male" : "Female",
+                               GenderCount = aGender.Count()
+                           });
+
+                foreach (var item in req)
+                {
+                    genName.Add(item.GenderName);
+                    genCount.Add(item.GenderCount);
+                }
+
+                obj.Gender = genName;
+                obj.GenderCount = genCount;
+
+
+                objRes.statusCode = Convert.ToInt32(HttpStatusCode.OK);
+                objRes.message = BaseException.SuccessRequest;
+                objRes.data = obj;
+            }
+            catch (Exception ex)
+            {
+                objRes.statusCode = Convert.ToInt32(HttpStatusCode.BadRequest);
+                objRes.message = BaseException.FailedRequest;
+                objRes.data = ex;
+            }
+
+            return objRes;
         }
 
         public GetEmployeeResponseVM GetEmployeeByNIK(string NIK)
@@ -162,19 +207,18 @@ namespace API.Repository.Data
             {
                 _context.SaveChanges();
                 objRes.statusCode = Convert.ToInt32(HttpStatusCode.OK);
-                objRes.message = "Success update"; 
-                objRes.data = null;
+                objRes.message = BaseException.SuccessUpdate;
+                objRes.data = BaseException.Msg_SuccessUpdate;
             }
             catch (Exception ex)
             {
                 objRes.statusCode = Convert.ToInt32(HttpStatusCode.BadRequest);
-                objRes.message = "Failed update";
+                objRes.message = BaseException.FailedUpdate;
                 objRes.data = ex;
             }
             
             return objRes;
         }
-
         public ResponseObj UpdateEducation(UpdateEducationVM objReq)
         {
             ResponseObj objRes = new ResponseObj();
@@ -193,13 +237,13 @@ namespace API.Repository.Data
             {
                 _context.SaveChanges();
                 objRes.statusCode = Convert.ToInt32(HttpStatusCode.OK);
-                objRes.message = "Success update";
-                objRes.data = null;
+                objRes.message = BaseException.SuccessUpdate;
+                objRes.data = BaseException.Msg_SuccessUpdate;
             }
             catch (Exception ex)
             {
                 objRes.statusCode = Convert.ToInt32(HttpStatusCode.BadRequest);
-                objRes.message = "Failed update";
+                objRes.message = BaseException.FailedUpdate;
                 objRes.data = ex;
             }
 
@@ -217,21 +261,23 @@ namespace API.Repository.Data
             {
                 _context.SaveChanges();
                 objRes.statusCode = Convert.ToInt32(HttpStatusCode.OK);
-                objRes.message = "Success delete";
-                objRes.data = null;
+                objRes.message = BaseException.SuccessDelete;
+                objRes.data = BaseException.Msg_SuccessDelete;
             }
             catch (Exception ex)
             {
                 objRes.statusCode = Convert.ToInt32(HttpStatusCode.BadRequest);
-                objRes.message = "Failed delete";
+                objRes.message = BaseException.FailedDelete;
                 objRes.data = ex;
             }
 
             return objRes;
         }
 
-        public int Register(RegisterVM obj)
+        public ResponseObj Register(RegisterVM obj)
         {
+            ResponseObj objRes = new ResponseObj();
+
             int insertRes = 400;
 
             bool isEmailDuplicate = (from a in _context.Employees where a.Email == obj.Email select a).FirstOrDefault() != null;
@@ -297,21 +343,39 @@ namespace API.Repository.Data
                 {
                     _context.Employees.Add(emp);
                     _context.Add(accRolesObj);
-                    insertRes = _context.SaveChanges();
+                    _context.SaveChanges();
+
                     insertRes = 200;
                 }
                 catch (Exception ex)
                 {
-                    return insertRes;
+                    objRes.statusCode = Convert.ToInt32(HttpStatusCode.BadRequest);
+                    objRes.message = BaseException.FailedRegister;
+                    objRes.data = ex;
+                    return objRes;
                 }
             }
             else 
             {
-                if (isPhoneDuplicate && !isEmailDuplicate) insertRes = 401;
-                else if (!isPhoneDuplicate && isEmailDuplicate) insertRes = 402;
-                else insertRes = 403;
+                objRes.statusCode = Convert.ToInt32(HttpStatusCode.BadRequest);
 
-                return insertRes;
+                if (isPhoneDuplicate && !isEmailDuplicate) 
+                {
+                    objRes.message = BaseException.FailedRegister;
+                    objRes.data = BaseException.DataDuplicate_Phone;
+                }
+                else if (!isPhoneDuplicate && isEmailDuplicate) 
+                {
+                    objRes.message = BaseException.FailedRegister;
+                    objRes.data = BaseException.DataDuplicate_Email;
+                }
+                else 
+                {
+                    objRes.message = BaseException.FailedRegister;
+                    objRes.data = BaseException.DataDuplicate_Email + " " + BaseException.DataDuplicate_Phone;
+                }
+
+                return objRes;
             }
 
             if (insertRes == 200)
@@ -320,13 +384,13 @@ namespace API.Repository.Data
 
                 insertRes = accRepos.ForgetPassword(obj.Email);
 
-                insertRes = 
-                    insertRes == 200 ? 200 : //Sukses Changepassword
-                    insertRes == 401 ? 404 : //Email tidak ditemukan
-                    405; //Gagal Changepassword
+                objRes.statusCode = insertRes == 200 ? 200 : 400;
+
+                objRes.message = insertRes == 200 ? BaseException.SuccessRegister : BaseException.FailedRegister;
+                objRes.data = insertRes == 200 ? BaseException.Msg_SuccessRegister : insertRes == 401 ? BaseException.DataNotFound_Email : BaseException.FailedChangePass;
             }
 
-            return insertRes;
+            return objRes;
         }
 
         private string GenerateNIK()

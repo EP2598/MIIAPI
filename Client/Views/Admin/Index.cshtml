@@ -2,3 +2,37 @@
     ViewData["Title"] = "Home Page";
     Layout = "AdminLayout";
 }
+
+<div class="form-row">
+    <div class="col-md-4 mb-3">
+        <div id="cardDetailEmployee" class="card mb-2">
+            <div class="card-header" data-toggle="collapse" data-target="#innerDetailEmployee" aria-expanded="false">
+                Employee Gender Count
+            </div>
+            <div id="innerDetailEmployee" class="card-body">
+
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-3">
+        <div id="carDetailEducation" class="card mb-2">
+            <div class="card-header" data-toggle="collapse" data-target="#innerDetailEducation" aria-expanded="false">
+                University Alumni Count
+            </div>
+            <div id="innerDetailEducation" class="card-body">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+@section Scripts {
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <script src="~/js/WorkerChart.js"></script>
+}

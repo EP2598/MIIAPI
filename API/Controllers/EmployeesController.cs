@@ -34,17 +34,9 @@ namespace API.Controllers
         [EnableCors("AllowOrigin")]
         public ActionResult Register(RegisterVM obj)
         {
-            var codeRes = _empRepos.Register(obj);
+            ResponseObj objRes = _empRepos.Register(obj);
 
-            return StatusCode(codeRes, new
-            {
-                status = codeRes == 200 ? HttpStatusCode.OK : HttpStatusCode.BadRequest,
-                message = codeRes == 200 ? "Insert berhasil." :
-                codeRes == 401 ? BaseException.DataDuplicate_Phone :
-                codeRes == 402 ? BaseException.DataDuplicate_Email :
-                codeRes == 403 ? BaseException.DataDuplicate_Email + " " + BaseException.DataDuplicate_Phone :
-                codeRes == 404 ? "Failed to change initial password" : "Insert gagal"
-            });
+            return Ok(objRes);
         }
 
         [HttpPost]
@@ -99,6 +91,15 @@ namespace API.Controllers
                     message = codeRes.Count > 0 ? "Sukses." : "Tidak ada data.",
                     data = codeRes
                 }) ;
+        }
+
+        [HttpGet("GetGenderCount")]
+        [EnableCors("AllowOrigin")]
+        public ActionResult GetGenderCount() 
+        {
+            ResponseObj objRes = _empRepos.GetGenderCount();
+
+            return Ok(objRes);
         }
 
         [HttpGet("TestCors")]

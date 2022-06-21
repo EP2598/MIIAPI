@@ -1,4 +1,103 @@
-﻿function toPascalCase(string) {
+﻿$(document).ready(function () {
+    var table = $('#tableGridWorkerList').DataTable({
+        ajax: {
+            "url": "https://localhost:44309/API/Employees/GetEmployeeData",
+            "dataType": "json",
+            "dataSrc": "data"
+        },
+        dom: 'lBfrtip',
+        buttons: {
+            buttons: [
+                {
+                    extend: 'csv',
+                    className: 'ml-1 mr-1',
+                    exportOptions: {
+                        columns: [0, 1, 3, 4, 5]
+                    }
+                },
+                {
+                    extend: 'excel',
+                    className: 'ml-1 mr-1',
+                    exportOptions: {
+                        columns: [0, 1, 3, 4, 5]
+                    }
+                },
+                {
+                    extend: 'pdf',
+                    className: 'ml-1 mr-1',
+                    exportOptions: {
+                        columns: [0, 1, 3, 4, 5]
+                    }
+                }
+            ]
+        },
+        columns: [
+            {
+                data: 'nik',
+                render: function (data) {
+                    return `<a class="text-info" href="#" onclick="getDetails('${data}')" data-toggle="modal" data-target="#modalEmployee">${data}</a>`;
+                }
+            },
+            {
+                data: 'firstName'
+            },
+            {
+                data: 'lastName'
+            },
+            {
+                data: 'email'
+            },
+            {
+                data: 'phone'
+            },
+            {
+                data: 'birthDate',
+                render: function (data) {
+                    var date = moment(data);
+
+                    return '<span>' + date.format('DD/MM/YYYY') + '</span>';
+                }
+            },
+            //{
+            //    data: 'salary',
+            //    render: function (data, type) {
+            //        var number = $.fn.dataTable.render
+            //            .number(',', '.', 2, 'Rp. ')
+            //            .display(data);
+
+            //        return '<span>' + number + '</span>';
+            //    }
+            //}
+        ],
+        columnDefs: [
+            {
+                targets: [1],
+                render: function (data, type, row) {
+                    return toPascalCase(data) + ' ' + toPascalCase(row.lastName) + '';
+                },
+                width: "20%"
+            },
+            {
+                visible: false, targets: [2]
+            }
+        ],
+    });
+    $('#formEditEmployee').validate({
+        rules: {
+            formEmail: {
+                required: true,
+                email: true
+            }
+        },
+        message: {
+            formEmail: {
+                email: "Format email yang diterima adalah abc@domain.com"
+            }
+        }
+    });
+});
+
+function toPascalCase(string) {
     return `${string}`
         .toLowerCase()
         .replace(new RegExp(/[-_]+/, 'g'), ' ')
@@ -175,6 +274,23 @@ function registerData(firstName, lastName, email, phone, gender, birthDate, degr
             'Access-Control-Allow-Origin': '*',
         }
     }).done((res) => {
+        console.log(res);
+        if (res.statusCode === 200) {
+            Swal.fire(
+                res.message,
+                res.data,
+                'success'
+            )
+
+        }
+        else {
+            Swal.fire({
+                icon: 'error',
+                title: res.message,
+                text: res.data
+            })
+        }
+        
         return res;
     });
 }
@@ -277,10 +393,18 @@ function deleteEmployee() {
         let toastText = "";
 
         if (res.statusCode === 200) {
-            toastText = `<span>Data successfully deleted!</span>`;
+            Swal.fire(
+                res.message,
+                res.data,
+                'success'
+            )
         }
         else {
-            toastText = `<span>Data failed to delete!</span>`;
+            Swal.fire({
+                icon: 'error',
+                title: res.message,
+                text: res.data
+            })
         }
 
         showToast(toastText);
@@ -293,106 +417,89 @@ function deleteEmployee() {
     $('#modalEmployee').modal('toggle');
 }
 
-$(document).ready(function () {
-    $('#tableGridWorkerList').DataTable({
-        ajax: {
-            "url": "https://localhost:44309/API/Employees/GetEmployeeData",
-            "dataType": "json",
-            "dataSrc": "data"
-        },
-        dom: 'lBfrtip',
-        buttons: {
-            buttons: [
-                {
-                    extend: 'csv',
-                    className: 'ml-1 mr-1',
-                    exportOptions: {
-                        columns: [0, 1, 3, 4, 5]
-                    }
-                },
-                {
-                    extend: 'excel',
-                    className: 'ml-1 mr-1',
-                    exportOptions: {
-                        columns: [0, 1, 3, 4, 5]
-                    }
-                },
-                {
-                    extend: 'pdf',
-                    className: 'ml-1 mr-1',
-                    exportOptions: {
-                        columns: [0, 1, 3, 4, 5]
-                    }
-                }
-            ]
-        },
-        columns: [
-            {
-                data: 'nik',
-                render: function (data)
-                {
-                    return `<a class="text-info" href="#" onclick="getDetails('${data}')" data-toggle="modal" data-target="#modalEmployee">${data}</a>`;
-                }
-            },
-            {
-                data: 'firstName'
-            },
-            {
-                data: 'lastName'
-            },
-            {
-                data: 'email'
-            },
-            {
-                data: 'phone'
-            },
-            {
-                data: 'birthDate',
-                render: function (data)
-                {
-                    var date = moment(data);
-
-                    return '<span>' + date.format('DD/MM/YYYY') + '</span>';
-                }
-            },
-            //{
-            //    data: 'salary',
-            //    render: function (data, type) {
-            //        var number = $.fn.dataTable.render
-            //            .number(',', '.', 2, 'Rp. ')
-            //            .display(data);
-
-            //        return '<span>' + number + '</span>';
-            //    }
-            //}
-        ],
-        columnDefs: [
-            {
-                targets: [1],
-                render: function (data, type, row) {
-                    return toPascalCase(data) + ' ' + toPascalCase(row.lastName) + '';
-                },
-                width: "20%"
-            },
-            {
-                visible: false, targets: [2]
-            }
-        ],
-    });
-    $('#formEditEmployee').validate({
-        rules: {
-            formEmail: {
-                required: true,
-                email: true
-            }
-        },
-        message: {
-            formEmail: {
-                email: "Format email yang diterima adalah abc@domain.com"
-            }
+function confirmDelete() {
+    Swal.fire({
+        title: 'Delete this employee?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Delete'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            deleteEmployee();
+            
         }
-    });
-});
+    })
+}
+
+function updateEmployee() {
+    const FIELD_REQUIRED = "This field is required.";
+    const EMAIL_INVALID = "Please enter a valid email address format.";
+
+    let emailValid = validateEmail(document.getElementById("formEmail").value, FIELD_REQUIRED, EMAIL_INVALID);
+    let emailDuplicate = validateDuplicateData(document.getElementById("formEmail").value, "email");
+    let phoneDuplicate = validateDuplicateData(document.getElementById("validationCustom03").value, "phone");
+    if (emailValid && !emailDuplicate && !phoneDuplicate) {
+        //Bisa post
+        let nik = document.getElementById("formNIK").value;
+        let firstName = document.getElementById("formFirstName").value;
+        let lastName = document.getElementById("formLastName").value;
+        let email = document.getElementById("formEmail").value;
+        let phone = document.getElementById("formPhone").value;
+        let gender = document.getElementById("formGender").value;
+        let birthDate = document.getElementById("formDate").value;
+        let salary = document.getElementById("formSalary").value;
+
+        let res = editEmployeeData(nik, firstName, lastName, email, phone, gender, birthDate, salary);
+
+        table.ajax.reload();
+
+        $('#modalEmployee').modal('toggle');
+
+    }
+}
+
+function updateEducation() {
+    let nik = document.getElementById("formNIK").value;
+    let universityId = document.getElementById("formUniversity").value;
+    let degree = document.getElementById("formDegree").value;
+    let gpa = document.getElementById("formGPA").value;
+
+    let res = editEducationData(nik, universityId, degree, gpa);
+
+    table.ajax.reload();
+
+    $('#modalEmployee').modal('toggle');
+}
+
+function registerEmployee() {
+    const FIELD_REQUIRED = "This field is required.";
+    const EMAIL_INVALID = "Please enter a valid email address format.";
+
+    let emailValid = validateEmail(document.getElementById("validationCustomEmail").value, FIELD_REQUIRED, EMAIL_INVALID);
+    let emailDuplicate = validateDuplicateData(document.getElementById("validationCustomEmail").value, "email");
+    let phoneDuplicate = validateDuplicateData(document.getElementById("validationCustom03").value, "phone");
+    if (emailValid && !emailDuplicate && !phoneDuplicate) {
+        //Set Employee Data
+        let firstName = document.getElementById("validationCustom01").value;
+        let lastName = document.getElementById("validationCustom02").value;
+        let email = document.getElementById("validationCustomEmail").value;
+        let phone = document.getElementById("validationCustom03").value;
+        let gender = document.getElementById("inputGender").value;
+        let birthDate = document.getElementById("validationCustom04").value;
+        let degree = document.getElementById("inputDegree").value;
+        let gpa = document.getElementById("validationCustom05").value;
+        let university = document.getElementById("inputUniversity").value;
+
+        let res = registerData(firstName, lastName, email, phone, gender, birthDate, degree, gpa, university);
+
+        table.ajax.reload();
+
+        $('#modalForm').modal('toggle');
+    }
+}
 
 function showMessage(input, msg, type) {
     const message = input.pa.querySelector("small");
@@ -467,6 +574,8 @@ function showToast(msg) {
     $('.toast').toast('show');
 }
 
+
+
 $("#formRegisterEmployee").submit(function (e) {
     console.log("Masuk submit");
     e.preventDefault();
@@ -496,11 +605,9 @@ $("#formRegisterEmployee").submit(function (e) {
 
         console.log(res);
 
-        $('#tableGridWorkerList').DataTable.ajax.reload();
+        table.ajax.reload();
 
         $('#modalForm').modal('toggle');
-
-        form.submit();
 
         return true;
     }
@@ -532,9 +639,9 @@ $("#formEditEmployee").submit(function (e) {
 
         let res = editEmployeeData(nik, firstName, lastName, email, phone, gender, birthDate, salary);
 
-        $('#tableGridWorkerList').DataTable.ajax.reload();
+        table.ajax.reload();
 
-        form.submit();
+        $('#modalEmployee').modal('toggle');
 
         return true;
     }
@@ -556,9 +663,9 @@ $("#formEditEducation").submit(function (e) {
 
     let res = editEducationData(nik, universityId, degree, gpa);
 
-    $('#tableGridWorkerList').DataTable.ajax.reload();
+    table.ajax.reload();
 
-    form.submit();
+    $('#modalEmployee').modal('toggle');
 
     return true;
 })
