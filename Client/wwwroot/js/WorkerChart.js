@@ -29,9 +29,7 @@
     $.ajax({
         type: "GET",
         url: "https://localhost:44309/API/Universities/GetAlumniCount"
-    }).done((res) => {
-        console.log(res);
-        
+    }).done((res) => {        
         var options = {
             chart: {
                 type: 'bar'
@@ -55,5 +53,33 @@
         chart.render();
 
 
+    });
+
+    //Test HttpClient Get
+    //let nik = "062020220011";
+    //let objReq = {
+    //    NIK:nik};
+    $.ajax({
+        type: "get",
+        url: "Employees/GetRegistered/"
+    }).done((res) => {
+        console.log(res);
+    }).fail((err) => {
+        console.log(err);
+    });
+
+    //Test HttpClient Post
+    let nik = "062020220011";
+    let objReq = {
+        NIK: nik
+    };
+    $.ajax({
+        type: "post",
+        url: "Employees/GetDataByNIK/",
+        data: objReq
+    }).done((res) => {
+        console.log(res);
+    }).fail((err) => {
+        console.log(err);
     });
 })
