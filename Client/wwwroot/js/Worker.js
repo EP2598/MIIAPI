@@ -118,23 +118,24 @@ function getDetails(nik) {
         contentType: "application/json; charset=utf-8"
     }).done((res) => {
         console.log(res);
+        console.log(res.data.firstName);
 
         //Edit Employee Data
-        document.getElementById("formFirstName").value = toPascalCase(res.firstName);
-        document.getElementById("formLastName").value = toPascalCase(res.lastName);
-        document.getElementById("formEmail").value = res.email;
-        document.getElementById("formPhone").value = res.phone;
-        document.getElementById("formDate").value = moment(res.birthDate).format('yyyy-MM-DD');
-        document.getElementById("formNIK").value = res.nik;
-        document.getElementById("formSalary").value = res.salary;
-        document.getElementById("formGender").value = res.gender;
+        document.getElementById("formFirstName").value = toPascalCase(res.data.firstName);
+        document.getElementById("formLastName").value = toPascalCase(res.data.lastName);
+        document.getElementById("formEmail").value = res.data.email;
+        document.getElementById("formPhone").value = res.data.phone;
+        document.getElementById("formDate").value = moment(res.data.birthDate).format('yyyy-MM-DD');
+        document.getElementById("formNIK").value = res.data.nik;
+        document.getElementById("formSalary").value = res.data.salary;
+        document.getElementById("formGender").value = res.data.gender;
 
         //Edit Education Data
         let uniId = 1;
-        if (res.universityName[0] === "Universitas Pokemon") {
+        if (res.data.universityName[0] === "Universitas Pokemon") {
             uniId = 1;
         }
-        else if (res.universityName[0] === "GachArena") {
+        else if (res.data.universityName[0] === "GachArena") {
             uniId = 2;
         }
         else {
@@ -143,24 +144,24 @@ function getDetails(nik) {
         document.getElementById("formUniversity").value = uniId;
 
         let degreeId = 1;
-        if (res.educationDegree[0] === "D3") { degreeId = 1; }
-        else if (res.educationDegree[0] === "D4") { degreeId = 2; }
-        else if (res.educationDegree[0] === "S1") { degreeId = 3;}
-        else if (res.educationDegree[0] === "S2") { degreeId = 4;}
+        if (res.data.educationDegree[0] === "D3") { degreeId = 1; }
+        else if (res.data.educationDegree[0] === "D4") { degreeId = 2; }
+        else if (res.data.educationDegree[0] === "S1") { degreeId = 3;}
+        else if (res.data.educationDegree[0] === "S2") { degreeId = 4;}
         else { degreeId = 5}
         document.getElementById("formDegree").value = degreeId;
-        document.getElementById("formGPA").value = res.educationGPA[0];
+        document.getElementById("formGPA").value = res.data.educationGPA[0];
 
         //Preview Roles Data
-        let roleList = res.roleName;     
+        let roleList = res.data.roleName;     
         let roleDetail = "";
 
         for (var i = 0; i < roleList.length; i++) {
             roleDetail += `         <span class="badge badge-success">${roleList[i]}</span>`;
         }
 
-        let empName = toPascalCase(res.firstName) + " " + toPascalCase(res.lastName);
-        let title = `<h5 class="modal-title" id="modalEmployeeTitle">${res.nik} - ${empName}</h5>`;
+        let empName = toPascalCase(res.data.firstName) + " " + toPascalCase(res.data.lastName);
+        let title = `<h5 class="modal-title" id="modalEmployeeTitle">${res.data.nik} - ${empName}</h5>`;
 
         $("#modalEmployeeTitle").html(title);
         $("#innerDetailRolesPlaceholder").html(roleDetail);

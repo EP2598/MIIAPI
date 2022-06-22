@@ -69,7 +69,7 @@
     });
 
     //Test HttpClient Post
-    let nik = "062020220011";
+    let nik = "061720220009";
     let objReq = {
         NIK: nik
     };

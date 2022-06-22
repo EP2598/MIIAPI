@@ -128,7 +128,7 @@ namespace API.Controllers
         [EnableCors("AllowOrigin")]
         public ActionResult GetEmployeeDetail(GetEmployeeParameterVM obj)
         {
-            GetEmployeeResponseVM objResponse = _empRepos.GetEmployeeByNIK(obj.NIK);
+            ResponseObj objResponse = _empRepos.GetEmployeeByNIK(obj.NIK);
 
             return Ok(objResponse);
         }

@@ -31,14 +31,15 @@ namespace API.Controllers
             int loginRes = _accRepos.Login(obj, out Token);
             return StatusCode(loginRes, new
             {
-                status =
-                    loginRes == 200 ? HttpStatusCode.OK : HttpStatusCode.BadRequest,
-                Token = Token == null ? "No Token" : Token,
+                statusCode =
+                    loginRes == 200 ? Convert.ToInt32(HttpStatusCode.OK) : Convert.ToInt32(HttpStatusCode.BadRequest),
                 message =
                     loginRes == 200 ? "Login berhasil" :
                     loginRes == 401 ? "Email tidak ditemukan." :
                     loginRes == 402 ? "Password salah." :
-                    "Login gagal."
+                    "Login gagal.",
+                data = Token == null ? "No Token" : Token
+                
             });
         }
 

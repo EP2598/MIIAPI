@@ -130,20 +130,33 @@ namespace API.Repository.Data
             return objRes;
         }
 
-        public GetEmployeeResponseVM GetEmployeeByNIK(string NIK)
+        public ResponseObj GetEmployeeByNIK(string NIK)
         {
-            GetEmployeeResponseVM objResponse = new GetEmployeeResponseVM();
+            ResponseObj objResponse = new ResponseObj();
+            GetEmployeeResponseVM obj = new GetEmployeeResponseVM();
 
             #region Get Employee Data
             Employee empObj = _context.Employees.Find(NIK);
-            objResponse.NIK = empObj.NIK;
-            objResponse.FirstName = empObj.FirstName;
-            objResponse.LastName = empObj.LastName;
-            objResponse.Email = empObj.Email;
-            objResponse.Phone = empObj.Phone;
-            objResponse.BirthDate = empObj.BirthDate;
-            objResponse.Salary = empObj.Salary;
-            objResponse.Gender = Enum.GetName(typeof(Gender), empObj.Gender);
+            if (empObj != null)
+            {
+                obj.NIK = empObj.NIK;
+                obj.FirstName = empObj.FirstName;
+                obj.LastName = empObj.LastName;
+                obj.Email = empObj.Email;
+                obj.Phone = empObj.Phone;
+                obj.BirthDate = empObj.BirthDate;
+                obj.Salary = empObj.Salary;
+                obj.Gender = Enum.GetName(typeof(Gender), empObj.Gender);
+            }
+            else
+            {
+                objResponse.statusCode = Convert.ToInt32(HttpStatusCode.BadRequest);
+                objResponse.message = "Failed Get Personal Data";
+                objResponse.data = null;
+
+                return objResponse;
+            }
+            
             #endregion
 
             #region Get Education Data
@@ -169,9 +182,9 @@ namespace API.Repository.Data
                 uniList.Add(uniName);
             }
 
-            objResponse.UniversityName = uniList;
-            objResponse.EducationDegree = eduDegree;
-            objResponse.EducationGPA = eduGPA;
+            obj.UniversityName = uniList;
+            obj.EducationDegree = eduDegree;
+            obj.EducationGPA = eduGPA;
             #endregion
 
             #region Get Roles Data
@@ -181,8 +194,12 @@ namespace API.Repository.Data
                                      where a.NIK == NIK
                                      select b.RoleName).ToList();
 
-            objResponse.RoleName = roleList; 
+            obj.RoleName = roleList;
             #endregion
+
+            objResponse.statusCode = Convert.ToInt32(HttpStatusCode.OK);
+            objResponse.message = "Success Get Personal Data";
+            objResponse.data = obj;
 
             return objResponse;
         }

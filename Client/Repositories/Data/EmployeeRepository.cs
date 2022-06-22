@@ -3,6 +3,7 @@ using API.Models.API;
 using Client.Base;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -41,8 +42,15 @@ namespace Client.Repositories.Data
             string apiResp = await resp.Content.ReadAsStringAsync();
             if (!String.IsNullOrEmpty(apiResp))
             {
-                objResp.statusCode = 200;
-                objResp.message = "Success Get Personal Data";
+                JObject apiObj = JObject.Parse(apiResp);
+
+                List<string> childTokens = new List<string>();
+
+                foreach (var childToken in apiObj.Children<JProperty>())
+                    childTokens.Add(childToken.Value.ToString());
+
+                objResp.statusCode = Convert.ToInt32(childTokens[0]);
+                objResp.message = childTokens[1];
                 objResp.data = JsonConvert.DeserializeObject(apiResp);
             }
 
