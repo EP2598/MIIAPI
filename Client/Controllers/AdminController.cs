@@ -17,11 +17,7 @@ namespace Client.Controllers
             return View();
         }
 
-        public IActionResult Login()
-        {
-            return View();
-        }
-
+        [Authorize(Roles = "Director,Manager")]
         public IActionResult Workers()
         {
             return View();

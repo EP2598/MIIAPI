@@ -16,7 +16,11 @@
     </div>
 </div>
 
-<button type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#modalForm">Add</button>
+@if (User.IsInRole("Manager") || User.IsInRole("Director"))
+{ 
+    <button type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#modalForm">Add</button>    
+}
+
 
 <table id="tableGridWorkerList" class="table table-hover">
     <thead>
@@ -63,15 +67,15 @@
                                 <div class="form-row">
                                     <div class="col-md-4 mb-3">
                                         <label for="formFirstName">First name</label>
-                                        <input type="text" class="form-control" readonly id="formFirstName" value="Mark">
+                                        <input type="text" class="form-control" readonly id="formFirstName">
                                     </div>
                                     <div class="col-md-4 mb-3">
                                         <label for="formLastName">Last name</label>
-                                        <input type="text" class="form-control" readonly id="formLastName" value="Otto">
+                                        <input type="text" class="form-control" readonly id="formLastName">
                                     </div>
                                     <div class="col-md-4 mb-3">
                                         <label for="formEmail">Email</label>
-                                        <input type="email" class="form-control" id="formEmail" placeholder="Email" value="someone@domain.com" required>
+                                        <input type="email" class="form-control" id="formEmail" placeholder="someone@domain.com" required>
                                         <div id="invalidEmailUpdate" class="invalid-feedback">
                                             Please provide a valid Email.
                                         </div>
@@ -80,11 +84,11 @@
                                 <div class="form-row">
                                     <div class="col-md-4 mb-3">
                                         <label for="formNIK">NIK</label>
-                                        <input type="text" class="form-control" readonly id="formNIK" placeholder="12345" value="12345">
+                                        <input type="text" class="form-control" readonly id="formNIK">
                                     </div>
                                     <div class="col-md-4 mb-3">
                                         <label for="formSalary">Salary</label>
-                                        <input type="text" class="form-control" id="formSalary" placeholder="500000000" value="1000000" required>
+                                        <input type="text" class="form-control" id="formSalary" placeholder="500000000" required>
                                         <div class="invalid-feedback">
                                             Please provide a Salary.
                                         </div>
@@ -93,7 +97,7 @@
                                 <div class="form-row">
                                     <div class="col-md-4 mb-3">
                                         <label for="formPhone">Phone Number</label>
-                                        <input type="text" class="form-control" id="formPhone" placeholder="Phone" value="55555" required>
+                                        <input type="text" class="form-control" id="formPhone" placeholder="0858141233423" required>
                                         <div class="invalid-feedback">
                                             Please provide a phone number.
                                         </div>
@@ -104,7 +108,7 @@
                                     </div>
                                     <div class="col-md-2 mb-3">
                                         <label for="formGender">Gender</label>
-                                        <input type="text" class="form-control" id="formGender" readonly placeholder="Gender" value="Male">
+                                        <input type="text" class="form-control" id="formGender" readonly>
                                     </div>
                                 </div>
                             </div>
@@ -134,16 +138,16 @@
                                     <div class="col-md-2 mb-3">
                                         <label for="formDegree">Degree</label>
                                         <select id="formDegree" class="form-control" required>
-                                            <option value=1>D3</option>
-                                            <option value=2>D4</option>
-                                            <option value=3>S1</option>
-                                            <option value=4>S2</option>
-                                            <option value=5>S3</option>
+                                            <option value=0>D3</option>
+                                            <option value=1>D4</option>
+                                            <option value=2>S1</option>
+                                            <option value=3>S2</option>
+                                            <option value=4>S3</option>
                                         </select>
                                     </div>
                                     <div class="col-md-2 mb-3">
                                         <label for="formGPA">GPA</label>
-                                        <input type="text" class="form-control" id="formGPA" placeholder="GPA" value="3.50" required>
+                                        <input type="text" class="form-control" id="formGPA" placeholder="3.80" required>
                                     </div>
                                 </div>
                             </div>
@@ -183,21 +187,21 @@
                         <div class="form-row">
                             <div class="col-md-4 mb-3">
                                 <label for="validationCustom01">First name</label>
-                                <input type="text" class="form-control" id="validationCustom01" placeholder="First name" value="Mark" required>
+                                <input type="text" class="form-control" id="validationCustom01" placeholder="Mark" required>
                                 <div class="valid-feedback">
                                     Looks good!
                                 </div>
                             </div>
                             <div class="col-md-4 mb-3">
                                 <label for="validationCustom02">Last name</label>
-                                <input type="text" class="form-control" id="validationCustom02" placeholder="Last name" value="Otto" required>
+                                <input type="text" class="form-control" id="validationCustom02" placeholder="Otto" required>
                                 <div class="valid-feedback">
                                     Looks good!
                                 </div>
                             </div>
                             <div class="col-md-4 mb-3">
                                 <label for="validationCustomUsername">Email</label>
-                                <input type="text" class="form-control" id="validationCustomEmail" placeholder="Email" value="someone@domain.com" required>
+                                <input type="text" class="form-control" id="validationCustomEmail" placeholder="someone@domain.com" required>
                                 <div class="invalid-feedback">
                                     Please provide an Email.
                                 </div>
@@ -206,7 +210,7 @@
                         <div class="form-row border-bottom">
                             <div class="col-md-4 mb-3">
                                 <label for="validationCustom03">Phone Number</label>
-                                <input type="text" class="form-control" id="validationCustom03" placeholder="Phone" required>
+                                <input type="text" class="form-control" id="validationCustom03" placeholder="0858141233423" required>
                                 <div class="invalid-feedback">
                                     Please provide a phone number.
                                 </div>
@@ -268,7 +272,7 @@
                             </div>
                             <div class="col-md-2 mb-3">
                                 <label for="validationCustom05">GPA</label>
-                                <input type="text" class="form-control" id="validationCustom05" placeholder="GPA" value="3.50" required>
+                                <input type="text" class="form-control" id="validationCustom05" placeholder="3.80" required>
                                 <div class="valid-feedback">
                                     Looks good!
                                 </div>

@@ -13,6 +13,7 @@ using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -73,6 +74,26 @@ namespace Client
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
+            app.UseStatusCodePages(async context =>
+            {
+                var req = context.HttpContext.Request;
+                var res = context.HttpContext.Response;
+
+                if (res.StatusCode.Equals((int)HttpStatusCode.Unauthorized))
+                {
+                    res.Redirect("/unauthorized");
+                }
+                else if (res.StatusCode.Equals((int)HttpStatusCode.Forbidden))
+                {
+                    res.Redirect("/forbidden");
+                }
+                else if (res.StatusCode.Equals((int)HttpStatusCode.NotFound))
+                {
+                    res.Redirect("/notfound");
+                }
+            });
+
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 

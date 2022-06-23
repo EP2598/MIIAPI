@@ -118,7 +118,6 @@ function getDetails(nik) {
         contentType: "application/json; charset=utf-8"
     }).done((res) => {
         console.log(res);
-        console.log(res.data.firstName);
 
         //Edit Employee Data
         document.getElementById("formFirstName").value = toPascalCase(res.data.firstName);
@@ -144,11 +143,11 @@ function getDetails(nik) {
         document.getElementById("formUniversity").value = uniId;
 
         let degreeId = 1;
-        if (res.data.educationDegree[0] === "D3") { degreeId = 1; }
-        else if (res.data.educationDegree[0] === "D4") { degreeId = 2; }
-        else if (res.data.educationDegree[0] === "S1") { degreeId = 3;}
-        else if (res.data.educationDegree[0] === "S2") { degreeId = 4;}
-        else { degreeId = 5}
+        if (res.data.educationDegree[0] === "D3") { degreeId = 0; }
+        else if (res.data.educationDegree[0] === "D4") { degreeId = 1; }
+        else if (res.data.educationDegree[0] === "S1") { degreeId = 2;}
+        else if (res.data.educationDegree[0] === "S2") { degreeId = 3;}
+        else { degreeId = 4}
         document.getElementById("formDegree").value = degreeId;
         document.getElementById("formGPA").value = res.data.educationGPA[0];
 
