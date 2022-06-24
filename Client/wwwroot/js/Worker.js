@@ -10,26 +10,31 @@
             buttons: [
                 {
                     extend: 'csv',
-                    className: 'ml-1 mr-1',
+                    className: 'ml-1 mr-1 btn btn-info',
                     exportOptions: {
                         columns: [0, 1, 3, 4, 5]
                     }
                 },
                 {
                     extend: 'excel',
-                    className: 'ml-1 mr-1',
+                    className: 'ml-1 mr-1 btn btn-info',
                     exportOptions: {
                         columns: [0, 1, 3, 4, 5]
                     }
                 },
                 {
                     extend: 'pdf',
-                    className: 'ml-1 mr-1',
+                    className: 'ml-1 mr-1 btn btn-info',
                     exportOptions: {
                         columns: [0, 1, 3, 4, 5]
                     }
                 }
-            ]
+            ],
+            dom: {
+                button: {
+                className: 'btn'
+                }
+            }
         },
         columns: [
             {

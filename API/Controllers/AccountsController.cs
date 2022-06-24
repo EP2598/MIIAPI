@@ -51,24 +51,26 @@ namespace API.Controllers
             int actionRes = _accRepos.ForgetPassword(obj.Email);
             return StatusCode(actionRes, new
             {
-                status =
+                statusCode =
                     actionRes == 200 ? HttpStatusCode.OK : HttpStatusCode.BadRequest,
                 message =
                     actionRes == 200 ? "OTP berhasil dikirimkan. Periksa email." :
                     actionRes == 401 ? "Email tidak ditemukan." :
-                    "OTP gagal dikirimkan."
+                    "OTP gagal dikirimkan.",
+                data = ""
             });
         }
 
         [HttpPost]
         [Route("ChangePassword")]
+        [EnableCors("AllowOrigin")]
         public ActionResult ChangePassword(ChangePasswordVM obj)
         {
             int actionRes = _accRepos.ChangePassword(obj);
             return StatusCode(actionRes,
                 new
                 {
-                    status =
+                    statusCode =
                         actionRes == 200 ? HttpStatusCode.OK : HttpStatusCode.BadRequest,
                     message =
                         actionRes == 401 ? "Email tidak ditemukan." :
@@ -76,7 +78,8 @@ namespace API.Controllers
                         actionRes == 403 ? "OTP yang dimasukkan salah." :
                         actionRes == 404 ? "OTP yang dimasukkan sudah expired." :
                         actionRes == 405 ? "Password yang dimasukkan tidak cocok." :
-                        "Password berhasil diubah."
+                        "Password berhasil diubah.",
+                    data = ""
                 });
         }
 

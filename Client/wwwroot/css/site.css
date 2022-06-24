@@ -12,6 +12,12 @@ a {
   color: #0366d6;
 }
 
+.bg-image {
+    background-image: url(../img/webBackground.jpg);
+    background-size: cover;
+    background-position: center;
+}
+
 .btn-primary {
   color: #fff;
   background-color: #1b6ec2;

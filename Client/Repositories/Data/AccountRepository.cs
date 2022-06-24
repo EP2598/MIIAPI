@@ -41,5 +41,31 @@ namespace Client.Repositories.Data
 
             return token;
         }
+
+        public async Task<ResponseObj> ForgetPassword(ForgetPasswordVM objReq)
+        {
+            ResponseObj objResp = null;
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(objReq), Encoding.UTF8, "application/json");
+            var result = await httpClient.PostAsync(request + "ForgetPassword", content);
+
+            string apiResponse = await result.Content.ReadAsStringAsync();
+            objResp = JsonConvert.DeserializeObject<ResponseObj>(apiResponse);
+
+            return objResp;
+        }
+
+        public async Task<ResponseObj> ChangePassword(ChangePasswordVM objReq)
+        {
+            ResponseObj objResp = null;
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(objReq), Encoding.UTF8, "application/json");
+            var result = await httpClient.PostAsync(request + "ChangePassword", content);
+
+            string apiResponse = await result.Content.ReadAsStringAsync();
+            objResp = JsonConvert.DeserializeObject<ResponseObj>(apiResponse);
+
+            return objResp;
+        }
     }
 }

@@ -30,6 +30,22 @@ namespace Client.Controllers
             return Json(jwtToken);
         }
 
+        [HttpPost]
+        public async Task<JsonResult> ForgotPassword(ForgetPasswordVM objReq)
+        {
+            var objResp = await _accRepos.ForgetPassword(objReq);
+            
+            return Json(objResp);
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> SubmitChangePassword(ChangePasswordVM objReq)
+        {
+            var objResp = await _accRepos.ChangePassword(objReq);
+
+            return Json(objResp);
+        }
+
         public IActionResult Index()
         {
             if (User.Identity.IsAuthenticated)
@@ -40,7 +56,11 @@ namespace Client.Controllers
             {
                 return View();
             }
-            
+        }
+
+        public IActionResult ChangePassword()
+        {
+            return View();
         }
     }
 }

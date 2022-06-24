@@ -86,6 +86,114 @@ function authMe() {
     });
 }
 
+function resetMe()
+{
+    var formForget = "";
+
+    formForget = `
+                                <div class="form-floating mb-3">
+                                    <input type="email" class="form-control" id="forgotInput" placeholder="name@example.com" required>
+                                    <label for="forgotInput">Email address</label>
+                                    <div class="invalid-feedback">
+                                        This field is required.
+                                    </div>
+                                    <div class="valid-feedback">
+                                    </div>
+                                </div>
+
+                                <div class="d-grid">
+                                    <button class="btn btn-lg btn-primary btn-login text-uppercase fw-bold mb-2" type="button" onclick="requestChange()">Request</button>
+                                </div>
+                `;
+
+    let form = document.getElementById("multiForm");
+
+    form.innerHTML = formForget;
+
+}
+
+function requestChange()
+{
+    let objReq =
+    {
+        Email: document.getElementById("forgotInput").value
+    }
+
+    $.ajax({
+        type: "post",
+        url: "../Login/ForgotPassword/",
+        data: objReq
+    }).done((res) => {
+        console.log(res);
+        switch (res.statusCode) {
+            case 200:
+                setTimeout(function () {
+                    window.location.replace("../Login/ChangePassword/");
+                }, 5500);
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Request submitted!',
+                    html: 'Check your email to reset password.'
+                }).then(function () {
+                    window.location.replace("../Login/ChangePassword/");
+                });
+                break;
+            default:
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Request failed!',
+                    text: res.message,
+                })
+        }
+    }).fail((err) => {
+        console.log("Forget Password - Error Log");
+        console.log(err);
+    });
+
+}
+
+function doReset()
+{
+    let objReq =
+    {
+        Email: document.getElementById("resetInput").value,
+        OTP: document.getElementById("resetOtp").value,
+        NewPassword: document.getElementById("resetPassword").value,
+        RetryPassword: document.getElementById("resetRetryPassword").value
+    };
+
+    $.ajax({
+        type: "post",
+        url: "../SubmitChangePassword/",
+        data: objReq
+    }).done((res) => {
+        console.log(res);
+        switch (res.statusCode) {
+            case 200:
+                setTimeout(function () {
+                    window.location.replace("../");
+                }, 5500);
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Request submitted!',
+                    html: 'Password has been changed!'
+                }).then(function () {
+                    window.location.replace("../");
+                });
+                break;
+            default:
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Request failed!',
+                    text: res.message,
+                })
+        }
+    }).fail((err) => {
+        console.log("Change Password - Error Log");
+        console.log(err);
+    });
+}
+
 (function () {
     'use strict';
     window.addEventListener('load', function () {
